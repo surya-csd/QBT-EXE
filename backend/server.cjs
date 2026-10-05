@@ -127,6 +127,11 @@ async function startServer() {
   app.use(cors({ origin: true }));
   app.use(express.json({ limit: '10mb' }));
 
+  // Root route so opening the backend URL in a browser shows a status instead of "Cannot GET /"
+  app.get('/', (_req, res) => {
+    res.json({ success: true, message: 'QBT API is running', health: '/api/health' });
+  });
+
   app.get('/api/health', async (_req, res) => {
     try { await dbGet(db, 'SELECT 1 AS ok'); res.json({ success: true, status: 'ok' }); }
     catch (e) { res.status(500).json({ success: false, message: e.message }); }
