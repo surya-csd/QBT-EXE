@@ -62,12 +62,10 @@ export default function Dashboard() {
       const response = await api.get("/dashboard");
 
       const data = response.data.data;
-   console.log(data,"dash data========")
-
-      // Summary counts
-      setQuotationCount(data.thisMonthTotalQuotation || 0);
-      setBillCount(data.thisMonthTotalBill || 0);
-      setRiskCount(data.thisMonthRiskAndHazard || 0);
+      // Summary counts (totals of all saved records, straight from the database)
+      setQuotationCount(data.totalQuotations || 0);
+      setBillCount(data.totalBills || 0);
+      setRiskCount(data.totalRiskAssessments || 0);
 
       // Recent documents
       setRecentDocuments(data.recentDocuments || []);
@@ -92,7 +90,7 @@ export default function Dashboard() {
             <div className="summary-icon quotation-icon">
               <FileBadge2 size={20} />
             </div>
-            <p>Quotations this month</p>
+            <p>Total quotations</p>
           </div>
 
           <div className="summary-value">
@@ -114,7 +112,7 @@ export default function Dashboard() {
             <div className="summary-icon bill-icon">
               <ReceiptIndianRupee size={20} />
             </div>
-            <p>Bills awaiting approval</p>
+            <p>Total bills</p>
           </div>
 
           <div className="summary-value">

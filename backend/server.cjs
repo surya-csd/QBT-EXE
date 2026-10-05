@@ -263,8 +263,6 @@ async function startServer() {
 
   app.get('/api/dashboard', async (_req,res,next)=>{
     try {
-      const month = new Date().toISOString().slice(0,7);
-
       // Treat MariaDB's zero-date (0000-00-00) as an empty date and
       // fall back to created_at. This preserves the existing records.
       const validDate = (value) => value && String(value) !== '0000-00-00' ? String(value) : null;
@@ -275,21 +273,13 @@ async function startServer() {
         return m ? `${m[3]}-${m[2]}-${m[1]}` : d;
       };
 
+      // These cards represent saved records, so they must match the Saved
+      // Quotations / Saved Bills / Saved TaRA lists (which return every row),
+      // not only the current month.
       const [q,b,t] = await Promise.all([
-        dbGet(db,
-          "SELECT COUNT(*) c FROM quotations WHERE substr(COALESCE(NULLIF(quotation_date,'0000-00-00'), created_at),1,7)=?",
-          [month]
-        ),
-        dbGet(db,
-          "SELECT COUNT(*) c FROM bills WHERE substr(COALESCE(NULLIF(bill_date,'0000-00-00'), created_at),1,7)=?",
-          [month]
-        ),
-        // This card represents saved TaRA records, so it must match the
-        // Saved TaRA list rather than only the current month.
-        dbGet(db,
-          'SELECT COUNT(*) c FROM task_risk_assessments',
-          []
-        ),
+        dbGet(db, 'SELECT COUNT(*) c FROM quotations', []),
+        dbGet(db, 'SELECT COUNT(*) c FROM bills', []),
+        dbGet(db, 'SELECT COUNT(*) c FROM task_risk_assessments', []),
       ]);
 
       const quotations = await dbAll(db, `
@@ -355,9 +345,9 @@ async function startServer() {
       res.json({
         success: true,
         data: {
-          thisMonthTotalQuotation: q.c || 0,
-          thisMonthTotalBill: b.c || 0,
-          thisMonthRiskAndHazard: t.c || 0,
+          totalQuotations: q.c || 0,
+          totalBills: b.c || 0,
+          totalRiskAssessments: t.c || 0,
           recentDocuments: allDocuments.slice(0, 8),
           allDocuments,
         },
