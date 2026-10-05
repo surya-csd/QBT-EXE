@@ -1,0 +1,1032 @@
+/* =========================================
+   SETTINGS PAGE
+   ========================================= */
+
+.settings-page {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  min-height: 0;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+/* =========================================
+   SETTINGS DESCRIPTION
+   ========================================= */
+
+.settings-description {
+  margin: 0 0 16px;
+  color: rgba(175, 202, 255, 0.82);
+  font-size: 14px;
+  font-weight: 400;
+  flex-shrink: 0;
+}
+
+
+/* =========================================
+   MAIN SETTINGS CARD
+   COMPANY / CUSTOMER
+   ========================================= */
+
+/* =========================================
+   MAIN SETTINGS CARD
+   CONTENT BASED HEIGHT
+   COMPANY / CUSTOMER / GST
+   ========================================= */
+
+.settings-card {
+  position: relative;
+  width: 100%;
+
+  /* Height based on content */
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+
+  padding: 20px 28px 18px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+
+  border-radius: 16px;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(74, 55, 180, 0.42),
+      transparent 55%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(14, 34, 88, 0.97),
+      rgba(10, 24, 65, 0.98)
+    );
+
+  border: 1px solid rgba(74, 111, 245, 0.55);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 30px rgba(0, 0, 0, 0.3);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+
+/* =========================================
+   GST CARD
+   CONTENT BASED HEIGHT
+   ========================================= */
+
+.settings-card.gst-card {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+
+  padding: 20px 28px 18px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   SETTINGS IMAGE
+   ========================================= */
+
+.settings-image {
+  position: absolute;
+  right: 100px;
+  top: 30%;
+
+  transform: translateY(-50%);
+
+  width: 300px;
+  height: auto;
+
+  object-fit: contain;
+}
+
+
+/* =========================================
+   GST IMAGE
+   ONLY GST IMAGE POSITION
+   ========================================= */
+
+.gst-card .settings-image {
+  right: 80px;
+  top: 45%;
+  width: 260px;
+}
+
+
+/* =========================================
+   SETTINGS CARD HEADING
+   ========================================= */
+
+.settings-card h2 {
+  margin: 0 0 20px;
+
+  color: #ffffff;
+
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+
+/* =========================================
+   SETTINGS FIELD
+   ========================================= */
+
+.settings-field {
+  margin-bottom: 8px;
+}
+
+
+.settings-field label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: rgba(225, 233, 255, 0.95);
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+.settings-field input {
+  width: 300px;
+  height: 38px;
+
+  padding: 8px 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(81, 125, 235, 0.65);
+
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(25, 51, 120, 0.88),
+      rgba(16, 36, 87, 0.92)
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.settings-field input:hover {
+  border-color: rgba(100, 145, 255, 0.85);
+}
+
+
+.settings-field input:focus {
+  outline: none;
+
+  border-color: #4d8dff;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(29, 58, 135, 0.95),
+      rgba(17, 39, 95, 0.98)
+    );
+
+  box-shadow:
+    0 0 0 3px rgba(70, 120, 255, 0.16),
+    0 0 18px rgba(70, 110, 255, 0.16);
+}
+
+
+/* =========================================
+   NUMBER INPUT
+   ========================================= */
+
+.settings-field input[type="number"] {
+  appearance: auto;
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+
+  color-scheme: dark;
+}
+
+
+.settings-field input[type="number"]::-webkit-inner-spin-button,
+.settings-field input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+
+  -webkit-appearance: auto;
+
+  filter: invert(1);
+}
+
+
+/* =========================================
+   SETTINGS SAVE BUTTON
+   ========================================= */
+
+.settings-save {
+  margin-top: 0;
+
+  padding: 11px 22px;
+
+  border: 1px solid rgba(45, 213, 255, 0.75);
+
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #258cff,
+      #18c7d8
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 18px rgba(24, 172, 255, 0.25);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+
+.settings-save:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+
+.settings-save:active {
+  transform: translateY(0);
+}
+
+
+/* =========================================
+   SETTINGS MESSAGE
+   ========================================= */
+
+.settings-message {
+  margin: 14px 0 0;
+
+  color: #42e6b0;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+/* =========================================
+   NUMBER INPUT WRAPPER
+   ========================================= */
+
+.number-input-wrapper {
+  position: relative;
+  width: 300px;
+}
+
+
+.number-input-wrapper input[type="number"] {
+  width: 300px;
+}
+
+
+/* Remove browser default arrows */
+
+.number-input-wrapper input[type="number"]::-webkit-inner-spin-button,
+.number-input-wrapper input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+.number-input-wrapper input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+
+/* =========================================
+   CUSTOM WHITE ARROWS
+   ========================================= */
+
+.custom-arrows {
+  position: absolute;
+
+  right: 10px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  z-index: 5;
+}
+
+
+.custom-arrows button {
+  width: 16px;
+  height: 12px;
+
+  padding: 0;
+  margin: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #ffffff;
+
+  font-size: 8px;
+  line-height: 8px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.custom-arrows button:hover {
+  color: #ffffff;
+}
+
+
+.custom-arrows button:active {
+  transform: scale(0.9);
+}
+
+
+/* =========================================
+   SIDEBAR ACTIVE STATE
+   ========================================= */
+
+.nav-item.active {
+  background:
+    linear-gradient(
+      135deg,
+      #6337e8,
+      #8b3dff
+    ) !important;
+
+  color: #ffffff !important;
+
+  box-shadow:
+    0 6px 18px rgba(110, 60, 255, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  border: 1px solid rgba(150, 120, 255, 0.35);
+}
+
+
+/* Active icon */
+
+.nav-item.active .sidebar-icon-box {
+  color: #ffffff !important;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+
+/* =========================================
+   SETTINGS TABS
+   ========================================= */
+
+.settings-tabs {
+  width: 100%;
+  height: 64px;
+
+  flex-shrink: 0;
+
+  margin-bottom: 16px;
+
+  padding: 6px 8px;
+
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 8px;
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(14, 34, 88, 0.96),
+      rgba(10, 24, 65, 0.98)
+    );
+
+  border: 1px solid rgba(74, 111, 245, 0.45);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 25px rgba(0, 0, 0, 0.25);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* =========================================
+   SETTINGS TAB
+   ========================================= */
+
+.settings-tab {
+  height: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  border: none;
+
+  border-radius: 13px;
+
+  background: transparent;
+
+  color: rgba(218, 229, 255, 0.85);
+
+  font-family: inherit;
+
+  font-size: 17px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.settings-tab:hover {
+  background: rgba(65, 95, 180, 0.18);
+
+  color: #ffffff;
+}
+
+
+.settings-tab.active {
+  background:
+    linear-gradient(
+      135deg,
+      #178eff,
+      #7432ed
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 7px 20px rgba(73, 83, 255, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+
+/* =========================================
+   SETTINGS TAB ICON
+   ========================================= */
+
+.settings-tab-icon {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(25, 67, 145, 0.55);
+
+  color: #ffffff;
+}
+
+
+.settings-tab.active .settings-tab-icon {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+
+/* =========================================
+   COMPANY / CUSTOMER CARD
+   ========================================= */
+
+.details-card {
+  padding: 18px 32px 16px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   DETAILS HEADING
+   ========================================= */
+
+.details-heading {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  margin-bottom: 10px;
+}
+
+
+.details-heading h2 {
+  margin: 0 0 5px;
+
+  color: #ffffff;
+
+  font-size: 19px;
+  font-weight: 700;
+}
+
+
+.details-heading p {
+  margin: 0;
+
+  color: rgba(175, 202, 255, 0.82);
+
+  font-size: 11px;
+}
+
+
+/* =========================================
+   DETAILS ICON
+   ========================================= */
+
+.details-icon {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 5px 18px rgba(20, 120, 255, 0.25);
+}
+
+
+.company-icon {
+  background:
+    linear-gradient(
+      135deg,
+      #168dff,
+      #2855e8
+    );
+}
+
+
+.customer-icon {
+  background:
+    linear-gradient(
+      135deg,
+      #7337ee,
+      #9b36ff
+    );
+}
+
+
+/* =========================================
+   FORM GRID
+   ========================================= */
+
+.details-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  column-gap: 42px;
+
+  row-gap: 8px;
+}
+
+
+.details-field {
+  min-width: 0;
+}
+
+
+.details-field.full-width {
+  grid-column: 1 / -1;
+}
+
+
+.details-field label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: rgba(225, 233, 255, 0.95);
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+
+.details-field input,
+.details-field select {
+  width: 100%;
+  height: 42px;
+
+  padding: 9px 13px;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(81, 125, 235, 0.65);
+
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(25, 51, 120, 0.88),
+      rgba(16, 36, 87, 0.92)
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.details-field input::placeholder {
+  color: rgba(175, 202, 255, 0.62);
+}
+
+
+.details-field input:hover,
+.details-field select:hover {
+  border-color: rgba(100, 145, 255, 0.85);
+}
+
+
+.details-field input:focus,
+.details-field select:focus {
+  border-color: #4d8dff;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(29, 58, 135, 0.95),
+      rgba(17, 39, 95, 0.98)
+    );
+
+  box-shadow:
+    0 0 0 3px rgba(70, 120, 255, 0.12),
+    0 0 18px rgba(70, 110, 255, 0.12);
+}
+
+
+/* =========================================
+   SELECT
+   ========================================= */
+
+.details-field select {
+  appearance: auto;
+
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+
+  color-scheme: dark;
+
+  cursor: pointer;
+}
+
+
+.details-field select option {
+  background: #10265b;
+
+  color: #ffffff;
+}
+
+
+/* =========================================
+   SAVE BUTTON
+   ========================================= */
+
+.details-save {
+  margin-top: 16px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  min-width: 185px;
+  min-height: 42px;
+
+  padding: 11px 20px;
+
+  border: 1px solid rgba(45, 213, 255, 0.75);
+
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #258cff,
+      #18c7d8
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 18px rgba(24, 172, 255, 0.25);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+
+.details-save:hover {
+  transform: translateY(-1px);
+
+  filter: brightness(1.08);
+}
+
+
+.details-save:active {
+  transform: translateY(0);
+}
+
+
+.details-save:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.85;
+}
+
+
+/* =========================================
+   ACTION BUTTONS
+   ========================================= */
+
+.settings-action-buttons {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 16px;
+}
+
+
+.settings-action-buttons .details-save,
+.settings-action-buttons .settings-save {
+  margin-top: 0;
+}
+
+
+.settings-action-buttons .cancel-button {
+  width: auto;
+
+  min-width: 100px;
+}
+
+
+/* =========================================
+   CUSTOMER BUTTON
+   ========================================= */
+
+.customer-save {
+  border-color: rgba(170, 100, 255, 0.75);
+
+  background:
+    linear-gradient(
+      135deg,
+      #7432ed,
+      #a33cff
+    );
+
+  box-shadow:
+    0 7px 18px rgba(140, 50, 255, 0.25);
+}
+
+
+/* =========================================
+   BUTTON LOADER
+   ========================================= */
+
+.button-loader {
+  width: 15px;
+  height: 15px;
+
+  min-width: 15px;
+  min-height: 15px;
+
+  border: 2px solid rgba(255, 255, 255, 0.35);
+
+  border-top: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+
+  border-radius: 50%;
+
+  display: inline-block;
+
+  animation: buttonLoaderSpin 0.7s linear infinite;
+}
+
+
+@keyframes buttonLoaderSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 700px) {
+
+  .settings-page {
+    height: 100%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+
+  .settings-page h1 {
+    font-size: 24px;
+  }
+
+
+  .settings-tabs {
+    height: auto;
+
+    grid-template-columns: 1fr;
+
+    margin-bottom: 16px;
+  }
+
+
+  .settings-tab {
+    min-height: 55px;
+  }
+
+
+  .settings-card {
+    flex: none;
+
+    width: 100%;
+
+    height: auto;
+
+    min-height: 0;
+
+    overflow: visible;
+
+    padding: 22px;
+  }
+
+
+  /* GST card on mobile */
+
+  .settings-card.gst-card {
+    flex: none;
+
+    height: auto;
+
+    min-height: 0;
+
+    padding: 22px;
+  }
+
+
+  .settings-field input {
+    width: 100%;
+  }
+
+
+  .number-input-wrapper {
+    width: 100%;
+  }
+
+
+  .number-input-wrapper input[type="number"] {
+    width: 100%;
+  }
+
+
+  .details-grid {
+    grid-template-columns: 1fr;
+
+    column-gap: 0;
+  }
+
+
+  .details-field.full-width {
+    grid-column: auto;
+  }
+
+
+  .details-card {
+    padding: 18px 20px 20px;
+  }
+
+
+  .details-save {
+    max-width: 100%;
+  }
+
+
+  /* GST image on mobile */
+
+  .gst-card .settings-image {
+    position: relative;
+
+    right: auto;
+    top: auto;
+
+    transform: none;
+
+    width: 220px;
+
+    display: block;
+
+    margin: 20px auto 0;
+  }
+}

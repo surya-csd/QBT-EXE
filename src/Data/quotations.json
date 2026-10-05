@@ -1,0 +1,178 @@
+[
+  {
+    "id": 1,
+    "quotationNo": "QBT-2026-001",
+    "quotationDate": "04-09-2026",
+    "contractorId": 1,
+    "managerId": 1,
+    "subject": "Electrical Maintenance Work",
+    "sacNo": "998719",
+    "workCompletionDays": 30,
+    "subtotal": 50000,
+    "gstRate": 18,
+    "gstAmount": 9000,
+    "totalAmount": 59000,
+    "status": "Draft"
+  },
+  {
+    "id": 2,
+    "quotationNo": "QBT-2026-002",
+    "quotationDate": "03-09-2026",
+    "contractorId": 1,
+    "managerId": 1,
+    "subject": "Civil Maintenance Work",
+    "sacNo": "998346",
+    "workCompletionDays": 45,
+    "subtotal": 75000,
+    "gstRate": 18,
+    "gstAmount": 13500,
+    "totalAmount": 88500,
+    "status": "Submitted"
+  },
+  {
+    "id": 3,
+    "quotationNo": "QBT-2026-003",
+    "quotationDate": "02-09-2026",
+    "contractorId": 1,
+    "managerId": 1,
+    "subject": "Plant Maintenance Work",
+    "sacNo": "998719",
+    "workCompletionDays": 60,
+    "subtotal": 100000,
+    "gstRate": 18,
+    "gstAmount": 18000,
+    "totalAmount": 118000,
+    "status": "Approved",
+    "items": [
+      {
+        "id": 1,
+        "description": "Motor Maintenance",
+        "quantity": 2,
+        "unit": "Each",
+        "rate": 20000
+      },
+      {
+        "id": 2,
+        "description": "Pump Maintenance",
+        "quantity": 1,
+        "unit": "Each",
+        "rate": 30000
+      },
+      {
+        "id": 3,
+        "description": "Electrical Inspection",
+        "quantity": 1,
+        "unit": "Job",
+        "rate": 30000
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "quotationNo": "QBT-2026-004",
+    "quotationDate": "01-09-2026",
+    "contractorId": 1,
+    "managerId": 1,
+    "subject": "Repair Work",
+    "sacNo": "998719",
+    "workCompletionDays": 20,
+    "subtotal": 35000,
+    "gstRate": 18,
+    "gstAmount": 6300,
+    "totalAmount": 41300,
+    "status": "Rejected"
+  },
+  {
+    "id": 5,
+    "quotationNo": "QBT-2026-005",
+    "quotationDate": "05-09-2026",
+    "contractorId": 1,
+    "managerId": 1,
+    "subject": "Electrical Installation Work",
+    "sacNo": "998719",
+    "workCompletionDays": 25,
+    "subtotal": 65000,
+    "gstRate": 18,
+    "gstAmount": 11700,
+    "totalAmount": 76700,
+    "status": "Approved",
+    "items": [
+      {
+        "id": 1,
+        "description": "Electrical Panel Installation",
+        "quantity": 1,
+        "unit": "Job",
+        "rate": 40000
+      },
+      {
+        "id": 2,
+        "description": "Cable Installation",
+        "quantity": 5,
+        "unit": "Each",
+        "rate": 5000
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "quotationNo": "QBT-2026-006",
+    "quotationDate": "06-09-2026",
+    "contractorId": 1,
+    "managerId": 1,
+    "subject": "Mechanical Equipment Service",
+    "sacNo": "998719",
+    "workCompletionDays": 15,
+    "subtotal": 80000,
+    "gstRate": 18,
+    "gstAmount": 14400,
+    "totalAmount": 94400,
+    "status": "Approved",
+    "items": [
+      {
+        "id": 1,
+        "description": "Equipment Servicing",
+        "quantity": 2,
+        "unit": "Each",
+        "rate": 30000
+      },
+      {
+        "id": 2,
+        "description": "Parts Replacement",
+        "quantity": 1,
+        "unit": "Job",
+        "rate": 20000
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "quotationNo": "QBT-2026-007",
+    "quotationDate": "06-09-2026",
+    "contractorId": 1,
+    "managerId": 1,
+    "subject": "Civil Repair and Maintenance",
+    "sacNo": "998346",
+    "workCompletionDays": 40,
+    "subtotal": 90000,
+    "gstRate": 18,
+    "gstAmount": 16200,
+    "totalAmount": 106200,
+    "status": "Approved",
+    "items": [
+      {
+        "id": 1,
+        "description": "Building Repair",
+        "quantity": 1,
+        "unit": "Job",
+        "rate": 50000
+      },
+      {
+        "id": 2,
+        "description": "Floor Maintenance",
+        "quantity": 2,
+        "unit": "Each",
+        "rate": 20000
+      }
+    ]
+  }
+]

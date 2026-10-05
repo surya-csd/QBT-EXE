@@ -1,0 +1,436 @@
+.recent-title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.recent-title h3 {
+  margin: 0;
+}
+
+.view-all-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 0;
+  margin: 0;
+  margin-right: 50px;
+
+  border: none;
+  outline: none;
+  background: transparent;
+
+  color: #9b6cff;
+  font-size: 19px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.view-all-button span {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* =========================
+   Documents Page
+========================= */
+
+.documents-page {
+  width: 100%;
+  height: calc(100vh - 72px);
+  padding: 18px 28px 28px;
+  box-sizing: border-box;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+
+/* =========================
+   Page Header
+========================= */
+
+.documents-page-header {
+  margin-bottom: 18px;
+}
+
+.documents-page-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+
+
+
+/* =========================
+   Main Documents Card
+========================= */
+.documents-card {
+  width: 100%;
+  height: calc(100% - 55px);
+
+  display: flex;
+  flex-direction: column;
+
+  background: rgba(7, 19, 55, 0.72);
+
+  border: 1px solid rgba(91, 126, 210, 0.28);
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+
+/* =========================
+   Card Header
+========================= */
+
+.documents-card-header {
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 18px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid rgba(91, 126, 210, 0.2);
+}
+
+.documents-card-header h3 {
+  margin: 0;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  color: #ffffff;
+}
+
+.documents-count {
+  font-size: 12px;
+  color: #9daacf;
+}
+
+
+/* =========================
+   Table Header
+========================= */
+
+.documents-table-header {
+  height: 40px;
+
+  display: grid;
+
+  grid-template-columns:
+    1.1fr
+    3fr
+    1fr
+    0.9fr;
+
+  align-items: center;
+
+  padding: 0 16px;
+
+  box-sizing: border-box;
+
+  background: rgba(11, 28, 72, 0.75);
+
+  border-bottom: 1px solid rgba(91, 126, 210, 0.2);
+}
+
+.documents-table-header span {
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #d9e3ff;
+}
+
+
+/* =========================
+   Documents List
+========================= */
+.documents-list {
+  flex: 1;
+  min-height: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  scrollbar-width: none;
+}
+
+.documents-list::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* =========================
+   Document Row
+========================= */
+
+.documents-row {
+  min-height: 61px;
+
+  display: grid;
+
+  grid-template-columns:
+    1.1fr
+    3fr
+    1fr
+    0.9fr;
+
+  align-items: center;
+
+  padding: 0 16px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid rgba(91, 126, 210, 0.15);
+
+  transition: background 0.2s ease;
+}
+
+.documents-row:hover {
+  background: rgba(44, 75, 145, 0.16);
+}
+
+
+/* =========================
+   Document Main
+========================= */
+
+.documents-main {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+
+/* =========================
+   Document Icon
+========================= */
+
+.documents-icon {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  box-sizing: border-box;
+
+  background: rgba(20, 43, 91, 0.65);
+
+  border: 1px solid rgba(73, 145, 255, 0.45);
+
+  color: #54a5ff;
+
+  box-shadow:
+    0 0 10px rgba(52, 140, 255, 0.18);
+}
+
+
+/* Quotation */
+
+.documents-icon.quotation {
+  color: #55a8ff;
+
+  border-color: rgba(61, 151, 255, 0.55);
+
+  box-shadow:
+    0 0 12px rgba(52, 143, 255, 0.25);
+}
+
+
+/* Bill */
+
+.documents-icon.bill {
+  color: #21dfca;
+
+  border-color: rgba(24, 221, 201, 0.5);
+
+  box-shadow:
+    0 0 12px rgba(20, 220, 199, 0.2);
+}
+
+
+/* =========================
+   Document ID
+========================= */
+
+.documents-id {
+  min-width: 0;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #e9efff;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================
+   Description
+========================= */
+
+.documents-description {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  min-width: 0;
+
+  font-size: 13px;
+
+  color: #edeef0;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+}
+
+.documents-description span {
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.documents-description span:nth-child(2) {
+  flex-shrink: 0;
+
+  color: #68789f;
+}
+
+
+/* =========================
+   Date
+========================= */
+
+.documents-date {
+  font-size: 13px;
+
+  color: #f7f8f8;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   Status
+========================= */
+
+.documents-status {
+  justify-self: start;
+
+  min-width: 62px;
+
+  padding: 5px 11px;
+
+  border-radius: 20px;
+
+  text-align: center;
+
+  box-sizing: border-box;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+
+/* Approved */
+
+.documents-status.approved {
+  color: #36e5d0;
+
+  background: rgba(13, 100, 92, 0.25);
+
+  border: 1px solid rgba(28, 225, 205, 0.55);
+
+  box-shadow:
+    0 0 10px rgba(27, 221, 201, 0.18);
+}
+
+
+/* Draft */
+
+.documents-status.draft {
+  color: #c6cee5;
+
+  background: rgba(99, 110, 143, 0.22);
+
+  border: 1px solid rgba(157, 170, 204, 0.45);
+
+  box-shadow:
+    0 0 8px rgba(145, 157, 190, 0.12);
+}
+
+
+/* Submitted */
+
+.documents-status.submitted {
+  color: #66b4ff;
+
+  background: rgba(40, 105, 185, 0.22);
+
+  border: 1px solid rgba(76, 160, 255, 0.5);
+}
+
+
+/* Rejected */
+
+.documents-status.rejected {
+  color: #ff8194;
+
+  background: rgba(150, 38, 59, 0.2);
+
+  border: 1px solid rgba(255, 91, 117, 0.45);
+}
+
+
+/* =========================
+   Loading / Empty
+========================= */
+
+.documents-loading {
+  height: 150px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #9caacd;
+
+  font-size: 13px;
+}
+.back:hover{
+  cursor: pointer;
+}
+.documents-icon.risk { border-color: rgba(99, 255, 218, .55); color: #63ffda; }

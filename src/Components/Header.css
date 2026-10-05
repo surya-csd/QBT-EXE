@@ -1,0 +1,45 @@
+.header {
+  width: 100%;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header > :last-child {
+  margin-left: auto;
+}
+
+.menu-icon {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.page-title {
+  margin: 0 !important;
+  padding: 0;
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  position: static !important;
+  left: auto !important;
+  transform: none !important;
+  transform: translateY(-8px) !important;
+}

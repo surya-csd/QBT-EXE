@@ -1,0 +1,15 @@
+node_modules/
+dist/
+release/
+out/
+win-unpacked/
+.env
+
+*.exe
+*.blockmap
+*.db
+*.sqlite
+*.sqlite3
+
+builder-debug.yml
+builder-effective-config.yaml

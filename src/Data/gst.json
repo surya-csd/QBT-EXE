@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "GST 5%",
+    "rate": 5,
+    "cgst": 2.5,
+    "sgst": 2.5,
+    "active": true
+  },
+  {
+    "id": 2,
+    "name": "GST 12%",
+    "rate": 12,
+    "cgst": 6,
+    "sgst": 6,
+    "active": true
+  },
+  {
+    "id": 3,
+    "name": "GST 18%",
+    "rate": 18,
+    "cgst": 9,
+    "sgst": 9,
+    "active": true
+  },
+  {
+    "id": 4,
+    "name": "GST 28%",
+    "rate": 28,
+    "cgst": 14,
+    "sgst": 14,
+    "active": true
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "billNo": "BILL-2026-001",
+    "quotationId": 3,
+    "quotationNo": "QBT-2026-003",
+    "contractorId": 1,
+    "managerId": 1,
+    "amount": 118000,
+    "status": "Draft",
+    "billDate": "04-09-2026"
+  }
+]
