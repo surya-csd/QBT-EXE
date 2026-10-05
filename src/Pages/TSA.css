@@ -3618,20 +3618,79 @@
   width: 100%;
   overflow-x: auto;
 }
-.preview-risk-table {
+.preview-risk-table,
+.tsa .preview-risk-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 9px;
+  box-sizing: border-box;
 }
 .preview-risk-table th,
-.preview-risk-table td {
+.preview-risk-table td,
+.tsa .preview-risk-table th,
+.tsa .preview-risk-table td {
   border: 1px solid #000;
-  padding: 5px;
+  padding: 5px 4px;
   vertical-align: top;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
-.preview-risk-table th {
+.preview-risk-table th,
+.tsa .preview-risk-table th {
   text-align: center;
   font-weight: 700;
+}
+.preview-risk-table th:nth-child(1),
+.preview-risk-table td:nth-child(1),
+.tsa .preview-risk-table th:nth-child(1),
+.tsa .preview-risk-table td:nth-child(1) {
+  width: 4.5%;
+}
+.preview-risk-table th:nth-child(2),
+.preview-risk-table td:nth-child(2),
+.tsa .preview-risk-table th:nth-child(2),
+.tsa .preview-risk-table td:nth-child(2) {
+  width: 18.5%;
+}
+.preview-risk-table th:nth-child(3),
+.preview-risk-table td:nth-child(3),
+.tsa .preview-risk-table th:nth-child(3),
+.tsa .preview-risk-table td:nth-child(3) {
+  width: 15.5%;
+}
+.preview-risk-table th:nth-child(4),
+.preview-risk-table td:nth-child(4),
+.tsa .preview-risk-table th:nth-child(4),
+.tsa .preview-risk-table td:nth-child(4) {
+  width: 16%;
+}
+.preview-risk-table th:nth-child(5),
+.preview-risk-table td:nth-child(5),
+.tsa .preview-risk-table th:nth-child(5),
+.tsa .preview-risk-table td:nth-child(5) {
+  width: 7.5%;
+}
+.preview-risk-table th:nth-child(6),
+.preview-risk-table td:nth-child(6),
+.tsa .preview-risk-table th:nth-child(6),
+.tsa .preview-risk-table td:nth-child(6) {
+  width: 13.5%;
+}
+.preview-risk-table th:nth-child(7),
+.preview-risk-table td:nth-child(7),
+.tsa .preview-risk-table th:nth-child(7),
+.tsa .preview-risk-table td:nth-child(7) {
+  width: 17%;
+}
+.preview-risk-table th:nth-child(8),
+.preview-risk-table td:nth-child(8),
+.tsa .preview-risk-table th:nth-child(8),
+.tsa .preview-risk-table td:nth-child(8) {
+  width: 7.5%;
 }
 .preview-sop-step {
   margin-bottom: 15px;
