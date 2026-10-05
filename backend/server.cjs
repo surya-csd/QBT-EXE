@@ -276,10 +276,19 @@ async function startServer() {
       // These cards represent saved records, so they must match the Saved
       // Quotations / Saved Bills / Saved TaRA lists (which return every row),
       // not only the current month.
-      const [q,b,t] = await Promise.all([
+      // Current month (local time) as YYYY-MM for the "This Month Overview".
+      // A record belongs to the month of its document date, falling back to
+      // created_at when the date is empty or MariaDB's zero-date.
+      const now = new Date();
+      const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+      const [q,b,t,qm,bm,tm] = await Promise.all([
         dbGet(db, 'SELECT COUNT(*) c FROM quotations', []),
         dbGet(db, 'SELECT COUNT(*) c FROM bills', []),
         dbGet(db, 'SELECT COUNT(*) c FROM task_risk_assessments', []),
+        dbGet(db, "SELECT COUNT(*) c FROM quotations WHERE substr(COALESCE(NULLIF(quotation_date,'0000-00-00'), created_at),1,7)=?", [month]),
+        dbGet(db, "SELECT COUNT(*) c FROM bills WHERE substr(COALESCE(NULLIF(bill_date,'0000-00-00'), created_at),1,7)=?", [month]),
+        dbGet(db, "SELECT COUNT(*) c FROM task_risk_assessments WHERE substr(COALESCE(NULLIF(assessment_date,'0000-00-00'), created_at),1,7)=?", [month]),
       ]);
 
       const quotations = await dbAll(db, `
@@ -348,6 +357,9 @@ async function startServer() {
           totalQuotations: q.c || 0,
           totalBills: b.c || 0,
           totalRiskAssessments: t.c || 0,
+          thisMonthQuotations: qm.c || 0,
+          thisMonthBills: bm.c || 0,
+          thisMonthRiskAssessments: tm.c || 0,
           recentDocuments: allDocuments.slice(0, 8),
           allDocuments,
         },

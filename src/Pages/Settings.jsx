@@ -465,6 +465,8 @@ function Settings() {
             className="settings-image"
           />
 
+          <div className="gst-fields">
+
           {/* CGST */}
           <div className="settings-field">
             <label>CGST Rate (%)</label>
@@ -598,6 +600,8 @@ function Settings() {
 
               </div>
             </div>
+          </div>
+
           </div>
 
           {/* GST BUTTONS */}

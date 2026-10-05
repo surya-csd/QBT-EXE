@@ -17,6 +17,43 @@
 
   overflow-y: auto;
   overflow-x: hidden;
+
+  /* Scrollable, but without a visible scrollbar on the right */
+  scrollbar-width: none;
+}
+
+.settings-page::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+
+/* =========================================
+   SETTINGS LAYOUT
+   The header sits above the page inside .main, so
+   height: 100% would push the bottom of the page
+   (and the Edit / Cancel buttons) off-screen.
+   Let the page take only the space left below the header.
+   ========================================= */
+
+.main.settings-active {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden !important;
+}
+
+.main.settings-active > .header {
+  flex: 0 0 auto;
+}
+
+.main.settings-active > .settings-page {
+  /* auto (not 100%) so the 10px left margin from Sidebar.css
+     doesn't push the cards' right edge out of view */
+  width: auto;
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
 }
 
 
@@ -57,7 +94,10 @@
 
   box-sizing: border-box;
 
-  overflow: hidden;
+  /* clip (not hidden) still clips the rounded corners and the image, but
+     doesn't create a scroll container, so the sticky action bar sticks to
+     the bottom of the visible page */
+  overflow: clip;
 
   border-radius: 16px;
 
@@ -96,7 +136,7 @@
 
   padding: 20px 28px 18px;
 
-  overflow: hidden;
+  overflow: clip;
 }
 
 
@@ -558,7 +598,7 @@
 .details-card {
   padding: 18px 32px 16px;
 
-  overflow: hidden;
+  overflow: clip;
 }
 
 
@@ -851,6 +891,69 @@
 .settings-action-buttons .details-save,
 .settings-action-buttons .settings-save {
   margin-top: 0;
+}
+
+
+/* =========================================
+   COMPANY / CUSTOMER: FIT THE WINDOW
+   The card never grows taller than the space below the
+   tabs. When the window is short, only the fields scroll
+   inside the card, so the heading and the Edit / Update /
+   Cancel buttons always stay visible below the fields
+   (no overlay, no page scrollbar).
+   ========================================= */
+
+.settings-card.details-card,
+.settings-card.gst-card {
+  display: flex;
+  flex-direction: column;
+
+  flex: 0 1 auto;
+  min-height: 220px;
+}
+
+.details-card .details-heading,
+.gst-card h2,
+.settings-card .settings-action-buttons,
+.settings-card .settings-message {
+  flex-shrink: 0;
+}
+
+.gst-card .gst-fields {
+  flex: 0 1 auto;
+  min-height: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  margin: 0 -6px;
+  padding: 4px 6px;
+
+  scrollbar-width: none;
+}
+
+.gst-card .gst-fields::-webkit-scrollbar {
+  display: none;
+  width: 0;
+}
+
+.details-card .details-grid {
+  flex: 0 1 auto;
+  min-height: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* room for the focus glow, which overflow would otherwise clip */
+  margin: 0 -6px;
+  padding: 4px 6px;
+
+  scrollbar-width: none;
+}
+
+.details-card .details-grid::-webkit-scrollbar {
+  display: none;
+  width: 0;
 }
 
 

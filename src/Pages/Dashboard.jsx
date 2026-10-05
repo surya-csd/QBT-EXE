@@ -7,9 +7,6 @@ import {
   FileBadge2,
   ReceiptIndianRupee,
   ShieldCheck,
-  Building2,
-  BadgeCheck,
-  CalendarCheck2,
   Plus,
 } from "lucide-react";
 
@@ -55,6 +52,9 @@ export default function Dashboard() {
   const [quotationCount, setQuotationCount] = useState(0);
   const [billCount, setBillCount] = useState(0);
   const [riskCount, setRiskCount] = useState(0);
+  const [monthQuotationCount, setMonthQuotationCount] = useState(0);
+  const [monthBillCount, setMonthBillCount] = useState(0);
+  const [monthRiskCount, setMonthRiskCount] = useState(0);
   const [recentDocuments, setRecentDocuments] = useState([]);
 
   const loadDashboard = async () => {
@@ -66,6 +66,11 @@ export default function Dashboard() {
       setQuotationCount(data.totalQuotations || 0);
       setBillCount(data.totalBills || 0);
       setRiskCount(data.totalRiskAssessments || 0);
+
+      // This month overview
+      setMonthQuotationCount(data.thisMonthQuotations || 0);
+      setMonthBillCount(data.thisMonthBills || 0);
+      setMonthRiskCount(data.thisMonthRiskAssessments || 0);
 
       // Recent documents
       setRecentDocuments(data.recentDocuments || []);
@@ -310,44 +315,44 @@ export default function Dashboard() {
 
           <div className="overview-stats">
 
-            {/* Active Projects */}
+            {/* Quotations this month */}
             <div className="overview-stat">
 
               <div className="overview-stat-icon projects-icon">
-                <Building2 size={18} />
+                <FileBadge2 size={18} />
               </div>
 
               <div className="overview-stat-content">
-                <strong>{quotationCount}</strong>
-                <span>Active Projects</span>
+                <strong>{monthQuotationCount}</strong>
+                <span>Quotations this month</span>
               </div>
 
             </div>
 
-            {/* Pending Approvals */}
+            {/* Bills this month */}
             <div className="overview-stat">
 
               <div className="overview-stat-icon approval-icon">
-                <BadgeCheck size={18} />
+                <ReceiptIndianRupee size={18} />
               </div>
 
               <div className="overview-stat-content">
-                <strong>{billCount}</strong>
-                <span>Pending Approvals</span>
+                <strong>{monthBillCount}</strong>
+                <span>Bills this month</span>
               </div>
 
             </div>
 
-            {/* Inspections Scheduled */}
+            {/* TaRA this month */}
             <div className="overview-stat">
 
               <div className="overview-stat-icon inspection-icon">
-                <CalendarCheck2 size={18} />
+                <ShieldCheck size={18} />
               </div>
 
               <div className="overview-stat-content">
-                <strong>{riskCount}</strong>
-                <span>Inspections Scheduled</span>
+                <strong>{monthRiskCount}</strong>
+                <span>TaRA this month</span>
               </div>
 
             </div>

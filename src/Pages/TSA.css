@@ -3295,12 +3295,42 @@
   background: linear-gradient(135deg, #05091f 0%, #080d2b 45%, #050a20 100%);
   box-shadow: 0 8px 18px rgba(3, 8, 29, 0.45);
 }
-.saved-tara-btn {
-  position: absolute;
+/* Header layout: [menu] [title] [Saved TaRA] [stepper].
+   Every item keeps its natural size and the header wraps instead of
+   overlapping: on narrower windows the stepper moves to a second row,
+   and on very narrow ones the Saved TaRA button does too. The title is
+   always shown in full. */
+.tsa.tsa-page > .screen-only > .header {
+  flex-wrap: wrap;
+  row-gap: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
 
-  left: 46%;
-  top: 32px;
-  transform: translate(-50%, -50%);
+.tsa .header .page-title {
+  flex: 1 1 auto;
+  min-width: max-content;
+  font-size: clamp(20px, 2vw, 30px);
+  white-space: nowrap;
+}
+
+.main .tsa-page .header .stepper {
+  flex: 0 0 auto;
+  width: auto;
+  margin-left: auto;
+}
+
+/* Steps take the width of their label, so "Preview & Submit" isn't
+   cut off at the right edge */
+.main .tsa-page .header .stepper .step {
+  flex: 0 0 auto;
+  min-width: 105px;
+}
+
+.saved-tara-btn {
+  position: static;
+  flex: 0 0 auto;
+  white-space: nowrap;
   padding: 10px 18px;
   border: 1px solid #4d7cff;
   border-radius: 8px;
