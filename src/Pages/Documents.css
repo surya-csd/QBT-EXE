@@ -48,7 +48,6 @@
   overflow: hidden;
 }
 
-
 /* =========================
    Page Header
 ========================= */
@@ -64,8 +63,12 @@
   color: #ffffff;
 }
 
-
-
+.documents-page-header .back {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+}
 
 /* =========================
    Main Documents Card
@@ -89,7 +92,6 @@
     0 10px 30px rgba(0, 0, 0, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
-
 
 /* =========================
    Card Header
@@ -123,6 +125,91 @@
   color: #9daacf;
 }
 
+/* =========================
+   Filters
+========================= */
+
+.documents-filters {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 14px;
+
+  padding: 12px 18px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid rgba(91, 126, 210, 0.2);
+}
+
+.documents-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.documents-filter span {
+  font-size: 11px;
+  font-weight: 600;
+  color: #9daacf;
+}
+
+.documents-filter input,
+.documents-filter select {
+  height: 34px;
+  min-width: 150px;
+
+  padding: 0 10px;
+
+  box-sizing: border-box;
+
+  background: rgba(11, 28, 72, 0.75);
+  color: #e9efff;
+
+  border: 1px solid rgba(91, 126, 210, 0.35);
+  border-radius: 8px;
+
+  font-size: 13px;
+
+  color-scheme: dark;
+  outline: none;
+}
+
+.documents-filter input:focus,
+.documents-filter select:focus {
+  border-color: rgba(85, 168, 255, 0.8);
+}
+
+.documents-filter select option {
+  background: #0b1c48;
+  color: #e9efff;
+}
+
+.documents-filter-clear {
+  height: 34px;
+
+  padding: 0 16px;
+
+  background: transparent;
+  color: #9b6cff;
+
+  border: 1px solid rgba(155, 108, 255, 0.5);
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.documents-filter-clear:hover:not(:disabled) {
+  background: rgba(155, 108, 255, 0.12);
+}
+
+.documents-filter-clear:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
 
 /* =========================
    Table Header
@@ -157,7 +244,6 @@
   color: #d9e3ff;
 }
 
-
 /* =========================
    Documents List
 ========================= */
@@ -174,7 +260,6 @@
 .documents-list::-webkit-scrollbar {
   display: none;
 }
-
 
 /* =========================
    Document Row
@@ -206,7 +291,6 @@
   background: rgba(44, 75, 145, 0.16);
 }
 
-
 /* =========================
    Document Main
 ========================= */
@@ -219,7 +303,6 @@
 
   min-width: 0;
 }
-
 
 /* =========================
    Document Icon
@@ -245,10 +328,8 @@
 
   color: #54a5ff;
 
-  box-shadow:
-    0 0 10px rgba(52, 140, 255, 0.18);
+  box-shadow: 0 0 10px rgba(52, 140, 255, 0.18);
 }
-
 
 /* Quotation */
 
@@ -257,10 +338,8 @@
 
   border-color: rgba(61, 151, 255, 0.55);
 
-  box-shadow:
-    0 0 12px rgba(52, 143, 255, 0.25);
+  box-shadow: 0 0 12px rgba(52, 143, 255, 0.25);
 }
-
 
 /* Bill */
 
@@ -269,10 +348,8 @@
 
   border-color: rgba(24, 221, 201, 0.5);
 
-  box-shadow:
-    0 0 12px rgba(20, 220, 199, 0.2);
+  box-shadow: 0 0 12px rgba(20, 220, 199, 0.2);
 }
-
 
 /* =========================
    Document ID
@@ -291,7 +368,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 
 /* =========================
    Description
@@ -328,7 +404,6 @@
   color: #68789f;
 }
 
-
 /* =========================
    Date
 ========================= */
@@ -340,7 +415,6 @@
 
   white-space: nowrap;
 }
-
 
 /* =========================
    Status
@@ -364,7 +438,6 @@
   font-weight: 600;
 }
 
-
 /* Approved */
 
 .documents-status.approved {
@@ -374,10 +447,8 @@
 
   border: 1px solid rgba(28, 225, 205, 0.55);
 
-  box-shadow:
-    0 0 10px rgba(27, 221, 201, 0.18);
+  box-shadow: 0 0 10px rgba(27, 221, 201, 0.18);
 }
-
 
 /* Draft */
 
@@ -388,10 +459,8 @@
 
   border: 1px solid rgba(157, 170, 204, 0.45);
 
-  box-shadow:
-    0 0 8px rgba(145, 157, 190, 0.12);
+  box-shadow: 0 0 8px rgba(145, 157, 190, 0.12);
 }
-
 
 /* Submitted */
 
@@ -403,7 +472,6 @@
   border: 1px solid rgba(76, 160, 255, 0.5);
 }
 
-
 /* Rejected */
 
 .documents-status.rejected {
@@ -413,7 +481,6 @@
 
   border: 1px solid rgba(255, 91, 117, 0.45);
 }
-
 
 /* =========================
    Loading / Empty
@@ -430,7 +497,10 @@
 
   font-size: 13px;
 }
-.back:hover{
+.back:hover {
   cursor: pointer;
 }
-.documents-icon.risk { border-color: rgba(99, 255, 218, .55); color: #63ffda; }
+.documents-icon.risk {
+  border-color: rgba(99, 255, 218, 0.55);
+  color: #63ffda;
+}

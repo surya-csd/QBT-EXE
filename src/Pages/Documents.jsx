@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
@@ -58,6 +58,34 @@ function Status({ value }) {
 
 
 // =====================================================
+// FILTER HELPERS
+// =====================================================
+
+// Normalise the backend document type to one of the filter values
+function normalizeType(type) {
+  const t = String(type || "").trim().toLowerCase();
+
+  if (["bill", "billing", "bills"].includes(t)) return "bill";
+  if (["risk", "tara", "risk-assessment", "risk_assessment", "risk assessment"].includes(t)) return "tara";
+  return "quotation";
+}
+
+// The backend sends dates as DD-MM-YYYY; convert to YYYY-MM-DD so they
+// compare correctly against <input type="date"> values
+function toIsoDate(value) {
+  const s = String(value || "").trim();
+
+  let m = s.match(/^(\d{2})-(\d{2})-(\d{4})/);
+  if (m) return `${m[3]}-${m[2]}-${m[1]}`;
+
+  m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+
+  return null;
+}
+
+
+// =====================================================
 // DOCUMENTS PAGE
 // =====================================================
 
@@ -65,7 +93,38 @@ export default function Documents() {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
+
   const navigate = useNavigate();
+
+  const filteredDocuments = useMemo(() => {
+    return documents.filter((document) => {
+      if (typeFilter !== "all" && normalizeType(document.type) !== typeFilter) {
+        return false;
+      }
+
+      if (fromDate || toDate) {
+        const date = toIsoDate(document.date);
+
+        // Documents without a valid date can't match a date range
+        if (!date) return false;
+        if (fromDate && date < fromDate) return false;
+        if (toDate && date > toDate) return false;
+      }
+
+      return true;
+    });
+  }, [documents, fromDate, toDate, typeFilter]);
+
+  const hasFilters = fromDate || toDate || typeFilter !== "all";
+
+  const clearFilters = () => {
+    setFromDate("");
+    setToDate("");
+    setTypeFilter("all");
+  };
 
 
   // ===================================================
@@ -196,7 +255,12 @@ export default function Documents() {
       <div className="documents-page-header">
 
         <div>
-          <h1>All Documents</h1>
+          <h3
+            onClick={() => navigate("/")}
+            className="back"
+          >
+            ⬅ Back to Dashboard
+          </h3>
         </div>
 
       </div>
@@ -214,16 +278,64 @@ export default function Documents() {
 
         <div className="documents-card-header">
 
-          <h3
-            onClick={() => navigate("/")}
-            className="back"
-          >
-            ⬅ Back to Dashboard
-          </h3>
+          <h3>All Documents</h3>
 
           <span className="documents-count">
-            {documents.length} Documents
+            {hasFilters
+              ? `${filteredDocuments.length} of ${documents.length} Documents`
+              : `${documents.length} Documents`}
           </span>
+
+        </div>
+
+
+        {/* ===============================================
+            FILTERS
+        =============================================== */}
+
+        <div className="documents-filters">
+
+          <label className="documents-filter">
+            <span>From</span>
+            <input
+              type="date"
+              value={fromDate}
+              max={toDate || undefined}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
+          </label>
+
+          <label className="documents-filter">
+            <span>To</span>
+            <input
+              type="date"
+              value={toDate}
+              min={fromDate || undefined}
+              onChange={(e) => setToDate(e.target.value)}
+            />
+          </label>
+
+          <label className="documents-filter">
+            <span>Type</span>
+            <select
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+            >
+              <option value="all">All</option>
+              <option value="bill">Bills</option>
+              <option value="quotation">Quotations</option>
+              <option value="tara">TaRA</option>
+            </select>
+          </label>
+
+          <button
+            type="button"
+            className="documents-filter-clear"
+            onClick={clearFilters}
+            disabled={!hasFilters}
+          >
+            Clear
+          </button>
 
         </div>
 
@@ -259,9 +371,9 @@ export default function Documents() {
               Loading documents...
             </div>
 
-          ) : documents.length > 0 ? (
+          ) : filteredDocuments.length > 0 ? (
 
-            documents.map((document) => (
+            filteredDocuments.map((document) => (
 
               <div
                 className="documents-row"
@@ -330,7 +442,9 @@ export default function Documents() {
           ) : (
 
             <div className="documents-loading">
-              No documents found.
+              {hasFilters
+                ? "No documents match the selected filters."
+                : "No documents found."}
             </div>
 
           )}
