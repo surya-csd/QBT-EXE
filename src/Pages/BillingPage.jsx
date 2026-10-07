@@ -610,190 +610,242 @@ function BillingPage({ isOpen, setIsOpen }) {
     setShowPreview(false);
   };
 
-  const handlePrint = () => {
-    const billDocument =
-      document.querySelector(
-        ".billing-bill-document"
-      );
+ const handlePrint = () => {
+  const billDocument = document.querySelector(
+    ".billing-bill-document"
+  );
 
-    if (!billDocument) {
-      showAlert("Bill preview not found.", "warning");
+  if (!billDocument) {
+    showAlert("Bill preview not found.", "warning");
+    return;
+  }
+
+  const printContainer = document.createElement("div");
+  printContainer.className = "billing-print-container";
+
+  // Preview-ல் இருக்கும் document-ஐ exact-a clone செய்கிறோம்
+  const clonedDocument = billDocument.cloneNode(true);
+
+  const emptyRows = clonedDocument.querySelectorAll(
+    ".billing-empty-preview-row"
+  );
+  const itemRowCount = clonedDocument.querySelectorAll(
+    ".billing-bill-items-table tbody tr:not(.billing-empty-preview-row):not(.billing-bill-total-row):not(.billing-bill-grand-total-row)"
+  ).length;
+  const emptyRowsToKeep = Math.max(0, 5 - itemRowCount);
+
+  emptyRows.forEach((row, index) => {
+    if (index >= emptyRowsToKeep) {
+      row.remove();
       return;
     }
 
-    const printContainer =
-      document.createElement("div");
+    row.style.setProperty("height", "28px", "important");
 
-    printContainer.className =
-      "billing-print-container";
-    printContainer.innerHTML =
-      billDocument.outerHTML;
-    document.body.appendChild(
-      printContainer
-    );
+    Array.from(row.cells).forEach((cell) => {
+      cell.style.setProperty("height", "28px", "important");
+      cell.style.setProperty("min-height", "28px", "important");
+      cell.style.setProperty("padding", "0", "important");
+    });
+  });
 
-    const printStyle =
-      document.createElement("style");
-    printStyle.id = "billing-print-style";
-    printStyle.innerHTML = `
-      @media print {
-        @page {
-          size: A4 portrait;
-          margin: 0 !important;
-        }
+  printContainer.appendChild(clonedDocument);
+  document.body.appendChild(printContainer);
 
-        html,
-        body {
-          margin: 0 !important;
-          padding: 0 !important;
-          width: 210mm !important;
-          height: 297mm !important;
-          overflow: hidden !important;
-          background: white !important;
-        }
+  const printStyle = document.createElement("style");
+  printStyle.id = "billing-print-style";
 
-        body > *:not(.billing-print-container) {
-          display: none !important;
-        }
+  printStyle.innerHTML = `
+    @media print {
 
-        .billing-print-container,
-        .billing-print-container * {
-          visibility: visible !important;
-        }
-
-        .billing-print-container {
-          display: block !important;
-          width: 210mm !important;
-          height: 297mm !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          overflow: hidden !important;
-          background: white !important;
-          box-sizing: border-box !important;
-        }
-
-        .billing-print-container .billing-bill-document {
-          width: 794px !important;
-          height: 1123px !important;
-          min-height: 1123px !important;
-          max-width: none !important;
-          margin: 0 !important;
-          padding: 55px 54px !important;
-          box-sizing: border-box !important;
-          background: white !important;
-          color: #20242c !important;
-          border: none !important;
-          box-shadow: none !important;
-          overflow: hidden !important;
-          zoom: 1 !important;
-        }
-
-        .billing-print-container .billing-bill-document * {
-          -webkit-print-color-adjust: exact !important;
-          print-color-adjust: exact !important;
-          text-shadow: none !important;
-        }
-
-        .billing-print-container .billing-bill-document-title {
-          color: #205783 !important;
-        }
-
-        .billing-print-container .billing-bill-document-title h1 {
-          color: #174b78 !important;
-        }
-
-        .billing-print-container .billing-bill-party-box,
-        .billing-print-container .billing-bill-subject-row,
-        .billing-print-container .billing-bill-items-table,
-        .billing-print-container .billing-bill-items-table th,
-        .billing-print-container .billing-bill-items-table td {
-          background: #ffffff !important;
-        }
-
-        .billing-print-container .billing-bill-party-box {
-          color: #1f2937 !important;
-          border-color: #b8b8b8 !important;
-        }
-
-        .billing-print-container .billing-bill-party-label {
-          color: #01142f !important;
-        }
-
-        .billing-print-container .billing-bill-party-name,
-        .billing-print-container .billing-bill-party-box strong,
-        .billing-print-container .billing-bill-subject-row strong,
-        .billing-print-container .billing-bill-meta-row strong {
-          color: #172033 !important;
-        }
-
-        .billing-print-container .billing-bill-party-text {
-          color: #031128 !important;
-        }
-
-        .billing-print-container .billing-bill-subject-row,
-        .billing-print-container .billing-bill-meta-row {
-          color: #1f2937 !important;
-        }
-
-        .billing-print-container .billing-bill-items-table th {
-          color: #031d32 !important;
-          font-size: 15px !important;
-          padding: 7px 6px !important;
-        }
-
-        .billing-print-container .billing-bill-items-table td {
-          color: #031532 !important;
-          font-size: 14px !important;
-          padding: 7px 6px !important;
-        }
-
-        .billing-print-container .billing-bill-items-table tbody tr,
-        .billing-print-container .billing-bill-items-table tbody tr:has(.billing-sno-cell:empty) {
-          height: 26px !important;
-        }
-
-        .billing-print-container .billing-bill-items-table tbody tr:has(.billing-sno-cell:empty) td {
-          height: 26px !important;
-          min-height: 26px !important;
-          padding: 0 !important;
-          background: transparent !important;
-          border-top: none !important;
-          border-bottom: none !important;
-        }
-
-        .billing-print-container table {
-          page-break-inside: avoid !important;
-          break-inside: avoid !important;
-        }
-
-        .billing-print-container tr {
-          page-break-inside: avoid !important;
-          break-inside: avoid !important;
-        }
-
-        .billing-print-container * {
-          page-break-before: auto !important;
-        }
+      @page {
+        size: 210mm 297mm;
+        margin: 0;
       }
 
-      @media screen {
-        .billing-print-container {
-          display: none !important;
-        }
+      html,
+      body {
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        background: #ffffff !important;
       }
-    `;
 
-    document.head.appendChild(printStyle);
+      body > *:not(.billing-print-container) {
+        display: none !important;
+      }
+
+      .billing-bill-preview-overlay,
+      .billing-bill-preview-header,
+      .billing-preview-actions {
+        display: none !important;
+      }
+
+      .billing-print-container {
+        display: block !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+
+        width: 210mm !important;
+        height: 297mm !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: hidden !important;
+        background: #ffffff !important;
+      }
+
+      .billing-print-container .billing-bill-document {
+        display: block !important;
+
+        width: 269.23mm !important;
+        min-width: 0 !important;
+        max-width: none !important;
+
+        height: 380.77mm !important;
+        min-height: 297mm !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        padding: 4mm 8mm 8mm !important;
+
+        box-sizing: border-box !important;
+
+        background: #ffffff !important;
+        color: #20242c !important;
+
+        border: none !important;
+        box-shadow: none !important;
+
+        overflow: hidden !important;
+
+        transform: none !important;
+        zoom: 0.78 !important;
+      }
+
+      /*
+       * IMPORTANT:
+       * Preview-ல் இருக்கும் font/spacing/table
+       * values எதுவும் print-ல் மாற்றக்கூடாது.
+       */
+
+      .billing-print-container
+        .billing-bill-document-title {
+        margin-top: 0 !important;
+        margin-bottom: 18px !important;
+      }
+
+      .billing-print-container
+        .billing-bill-parties {
+        margin-bottom: 12px !important;
+      }
+
+      .billing-print-container
+        .billing-bill-subject-row {
+        margin-bottom: 14px !important;
+      }
+
+      .billing-print-container
+        .billing-bill-meta-row {
+        margin-bottom: 16px !important;
+      }
+
+      .billing-print-container
+        .billing-bill-items-table {
+        width: 100% !important;
+        max-width: 100% !important;
+        table-layout: fixed !important;
+        border-collapse: collapse !important;
+      }
+
+      .billing-print-container
+        .billing-bill-items-table th,
+      .billing-print-container
+        .billing-bill-items-table td {
+        padding: 7px 6px !important;
+        font-size: 15px !important;
+        line-height: normal !important;
+      }
+
+      .billing-print-container
+        .billing-bill-items-table
+        .billing-bill-total-row td {
+        height: 38px !important;
+        min-height: 38px !important;
+      }
+
+      .billing-print-container
+        .billing-bill-items-table
+        .billing-bill-grand-total-row td {
+        height: 45px !important;
+        min-height: 45px !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+      }
+
+      .billing-print-container
+        .billing-bill-items-table
+        tbody
+        tr {
+        height: auto !important;
+      }
+
+      .billing-print-container
+        .billing-bill-document
+        .billing-bill-items-table
+        tbody
+        tr.billing-empty-preview-row {
+        height: 28px !important;
+      }
+
+      .billing-print-container
+        .billing-bill-document
+        .billing-bill-items-table
+        tbody
+        tr.billing-empty-preview-row td {
+        height: 28px !important;
+        min-height: 28px !important;
+        padding: 0 !important;
+      }
+
+      table,
+      tr,
+      td,
+      th {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+
+    @media screen {
+      .billing-print-container {
+        display: none !important;
+      }
+    }
+  `;
+
+  document.head.appendChild(printStyle);
+
+  // Give browser time to render cloned document
+  setTimeout(() => {
+    window.print();
 
     setTimeout(() => {
-      window.print();
-
-      setTimeout(() => {
-        printContainer.remove();
-        printStyle.remove();
-      }, 500);
-    }, 200);
-  };
+      printContainer.remove();
+      printStyle.remove();
+    }, 500);
+  }, 200);
+};
 
   const filteredQuotations =
     approvedQuotations.filter((quotation) => {
@@ -1317,6 +1369,16 @@ function BillingPage({ isOpen, setIsOpen }) {
                   </div>
 
                   <table className="billing-bill-items-table">
+                     <colgroup>
+    <col className="bill-col-sno" />
+    <col className="bill-col-description" />
+    <col className="bill-col-qty" />
+    <col className="bill-col-unit" />
+    <col className="bill-col-rate-rs" />
+    <col className="bill-col-rate-ps" />
+    <col className="bill-col-amount-rs" />
+    <col className="bill-col-amount-ps" />
+  </colgroup>
                     <thead>
                       <tr>
                         <th
@@ -1480,111 +1542,76 @@ function BillingPage({ isOpen, setIsOpen }) {
                         }
                       )}
 
-                      <tr className="billing-bill-total-row">
-                        <td
-                          colSpan="6"
-                          className="billing-total-empty-cell"
-                        ></td>
+{/* SUBTOTAL */}
+<tr className="billing-bill-total-row">
+  <td colSpan="2"></td>
 
-                        <td
-                          colSpan="2"
-                          className="billing-total-combined-cell"
-                        >
-                          <span>Subtotal</span>
+  <td colSpan="4" className="billing-total-label-cell">
+    Subtotal
+  </td>
 
-                          <strong>
-                            ₹{" "}
-                            {subtotal.toLocaleString(
-                              "en-IN",
-                              {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              }
-                            )}
-                          </strong>
-                        </td>
-                      </tr>
+  <td colSpan="2" className="billing-total-amount-cell">
+    ₹{" "}
+    {subtotal.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}
+  </td>
+</tr>
 
-                      <tr className="billing-bill-total-row">
-                        <td
-                          colSpan="6"
-                          className="billing-total-empty-cell"
-                        ></td>
 
-                        <td
-                          colSpan="2"
-                          className="billing-total-combined-cell"
-                        >
-                          <span>
-                            CGST {cgstRate}%
-                          </span>
+{/* CGST */}
+<tr className="billing-bill-total-row">
+  <td colSpan="2"></td>
 
-                          <strong>
-                            ₹{" "}
-                            {cgst.toLocaleString(
-                              "en-IN",
-                              {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              }
-                            )}
-                          </strong>
-                        </td>
-                      </tr>
+  <td colSpan="4" className="billing-total-label-cell">
+    CGST {cgstRate}%
+  </td>
 
-                      <tr className="billing-bill-total-row">
-                        <td
-                          colSpan="6"
-                          className="billing-total-empty-cell"
-                        ></td>
+  <td colSpan="2" className="billing-total-amount-cell">
+    ₹{" "}
+    {cgst.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}
+  </td>
+</tr>
 
-                        <td
-                          colSpan="2"
-                          className="billing-total-combined-cell"
-                        >
-                          <span>
-                            SGST {sgstRate}%
-                          </span>
 
-                          <strong>
-                            ₹{" "}
-                            {sgst.toLocaleString(
-                              "en-IN",
-                              {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              }
-                            )}
-                          </strong>
-                        </td>
-                      </tr>
+{/* SGST */}
+<tr className="billing-bill-total-row">
+  <td colSpan="2"></td>
 
-                      <tr className="billing-bill-grand-total-row">
-                        <td
-                          colSpan="6"
-                          className="billing-total-empty-cell"
-                        ></td>
+  <td colSpan="4" className="billing-total-label-cell">
+    SGST {sgstRate}%
+  </td>
 
-                        <td
-                          colSpan="2"
-                          className="billing-total-combined-cell billing-grand-total-cell"
-                        >
-                          <div className="billing-total-content">
-                            <span>TOTAL</span>
+  <td colSpan="2" className="billing-total-amount-cell">
+    ₹{" "}
+    {sgst.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}
+  </td>
+</tr>
 
-                            <strong>
-                              ₹{" "}
-                              {total.toLocaleString(
-                                "en-IN",
-                                {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2,
-                                }
-                              )}
-                            </strong>
-                          </div>
-                        </td>
-                      </tr>
+
+{/* TOTAL */}
+<tr className="billing-bill-grand-total-row">
+  <td colSpan="2"></td>
+
+  <td colSpan="4" className="billing-total-label-cell billing-grand-total-cell">
+    TOTAL
+  </td>
+
+  <td colSpan="2" className="billing-total-amount-cell billing-grand-total-cell">
+    ₹{" "}
+    {total.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}
+  </td>
+</tr>
                     </tbody>
                   </table>
                 </div>

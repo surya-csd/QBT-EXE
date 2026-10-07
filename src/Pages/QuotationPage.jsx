@@ -384,15 +384,14 @@ function QuotationPage({ isOpen, setIsOpen }) {
   }
 
   if (quotationNo) {
-    // Preview is opt-in. A saved quotation route is not itself a preview request.
     const shouldOpenPreview =
-      location.state?.openPreview === true;
+      location.state?.openPreview !== false;
 
     setShowPreview(shouldOpenPreview);
 
-    // Do not watch the editable quotation number. Otherwise changing the
-    // number while editing reloads the old route target and can reopen preview.
-    loadQuotationByNumber(quotationNo);
+    if (quotation.quotationNo !== quotationNo) {
+      loadQuotationByNumber(quotationNo);
+    }
 
     return;
   }
@@ -402,6 +401,7 @@ function QuotationPage({ isOpen, setIsOpen }) {
   location.pathname,
   location.state,
   quotationNo,
+  quotation.quotationNo,
   fetchSavedQuotationsData,
   loadQuotationByNumber,
 ]);
@@ -530,10 +530,18 @@ function QuotationPage({ isOpen, setIsOpen }) {
       }
     };
 
-  const handleCloseSavedQuotations = () => {
-    setShowPreview(false);
-    navigate("/quotations");
-  };
+  const handleCloseSavedQuotations =
+    () => {
+      if (quotation.quotationNo) {
+        navigate(
+          `/quotations/savedquotations/${encodeURIComponent(
+            quotation.quotationNo
+          )}`
+        );
+      } else {
+        navigate("/quotations");
+      }
+    };
 
   const handleClosePreview = () => {
     if (location.state?.from === "documents") {
@@ -1298,7 +1306,7 @@ function QuotationPage({ isOpen, setIsOpen }) {
           min-height: 297mm !important;
           max-width: none !important;
           margin: 0 !important;
-          padding: 8mm !important;
+          padding: 4mm 8mm 8mm !important;
           box-sizing: border-box !important;
           background: white !important;
           border: none !important;
@@ -1720,7 +1728,7 @@ function QuotationPage({ isOpen, setIsOpen }) {
           </div>
 
           <div className="quotation-totals-box">
-            <div className="quotation-editor-total-row">
+            <div className="quotation-total-row">
               <span>
                 Subtotal
               </span>
@@ -1730,7 +1738,7 @@ function QuotationPage({ isOpen, setIsOpen }) {
               </strong>
             </div>
 
-            <div className="quotation-editor-total-row">
+            <div className="quotation-total-row">
               <span>
                 CGST {cgstRate}%
               </span>
@@ -1742,7 +1750,7 @@ function QuotationPage({ isOpen, setIsOpen }) {
               </strong>
             </div>
 
-            <div className="quotation-editor-total-row">
+            <div className="quotation-total-row">
               <span>
                 SGST {sgstRate}%
               </span>
@@ -2205,6 +2213,18 @@ function QuotationPage({ isOpen, setIsOpen }) {
                 </div>
 
                 <table className="quotation-document-items-table">
+                 <colgroup>
+  <col className="col-sno-width" />
+  <col className="col-description-width" />
+  <col className="col-qty-width" />
+  <col className="col-unit-width" />
+
+  <col className="col-rate-rs-width" />
+  <col className="col-rate-ps-width" />
+
+  <col className="col-amount-rs-width" />
+  <col className="col-amount-ps-width" />
+</colgroup>
                   <thead>
                     <tr>
                       <th
@@ -2378,87 +2398,85 @@ function QuotationPage({ isOpen, setIsOpen }) {
                       </tr>
                   ))}
 
-                    <tr className="quotation-summary-row">
-                      <td colSpan="6"></td>
+<tr className="quotation-summary-row">
+  <td colSpan="2"></td>
 
-                      <td
-                        colSpan="2"
-                        className="quotation-summary-cell"
-                      >
-                        <span>
-                          Subtotal
-                        </span>
+  <td
+    colSpan="4"
+    className="quotation-summary-label-cell"
+  >
+    <span>Subtotal</span>
+  </td>
 
-                        <strong>
-                          ₹
-                          {money(
-                            subtotal
-                          )}
-                        </strong>
-                      </td>
-                    </tr>
+  <td
+    colSpan="2"
+    className="quotation-summary-value-cell"
+  >
+    <strong>
+      ₹{money(subtotal)}
+    </strong>
+  </td>
+</tr>
 
-                    <tr className="quotation-summary-row">
-                      <td colSpan="6"></td>
+<tr className="quotation-summary-row">
+  <td colSpan="2"></td>
 
-                      <td
-                        colSpan="2"
-                        className="quotation-summary-cell"
-                      >
-                        <span>
-                          CGST
-                          {cgstRate}%
-                        </span>
+  <td
+    colSpan="4"
+    className="quotation-summary-label-cell"
+  >
+    <span>CGST {cgstRate}%</span>
+  </td>
 
-                        <strong>
-                          ₹
-                          {money(
-                            gstResult.cgst
-                          )}
-                        </strong>
-                      </td>
-                    </tr>
+  <td
+    colSpan="2"
+    className="quotation-summary-value-cell"
+  >
+    <strong>
+      ₹{money(gstResult.cgst)}
+    </strong>
+  </td>
+</tr>
 
-                    <tr className="quotation-summary-row">
-                      <td colSpan="6"></td>
+<tr className="quotation-summary-row">
+  <td colSpan="2"></td>
 
-                      <td
-                        colSpan="2"
-                        className="quotation-summary-cell"
-                      >
-                        <span>
-                          SGST
-                          {sgstRate}%
-                        </span>
+  <td
+    colSpan="4"
+    className="quotation-summary-label-cell"
+  >
+    <span>SGST {sgstRate}%</span>
+  </td>
 
-                        <strong>
-                          ₹
-                          {money(
-                            gstResult.sgst
-                          )}
-                        </strong>
-                      </td>
-                    </tr>
+  <td
+    colSpan="2"
+    className="quotation-summary-value-cell"
+  >
+    <strong>
+      ₹{money(gstResult.sgst)}
+    </strong>
+  </td>
+</tr>
 
-                    <tr className="quotation-summary-row quotation-total-row">
-                      <td colSpan="6"></td>
+<tr className="quotation-summary-row quotation-total-row">
+  <td colSpan="2"></td>
 
-                      <td
-                        colSpan="2"
-                        className="quotation-summary-cell"
-                      >
-                        <span>
-                          TOTAL
-                        </span>
+  <td
+    colSpan="4"
+    className="quotation-summary-label-cell"
+  >
+    <span>TOTAL</span>
+  </td>
 
-                        <strong>
-                          ₹
-                          {money(
-                            gstResult.total
-                          )}
-                        </strong>
-                      </td>
-                    </tr>
+  <td
+    colSpan="2"
+    className="quotation-summary-value-cell"
+  >
+    <strong>
+      ₹{money(gstResult.total)}
+    </strong>
+  </td>
+</tr>
                   </tbody>
                 </table>
 
@@ -2573,7 +2591,7 @@ function QuotationPage({ isOpen, setIsOpen }) {
             </div>
           </div>
         </div>
-      )}
+      )}col-sno-width
     </>
   );
 }

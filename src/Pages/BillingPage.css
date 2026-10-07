@@ -1441,6 +1441,8 @@ main:has(.billing-page) .menu-icon {
 .billing-bill-document-title {
   display: block !important;
   width: fit-content !important;
+  margin-top: 0 !important;
+  margin-bottom: 18px !important;
   margin-left: 50% !important;
   margin-right: 0 !important;
   transform: translateX(-50%) !important;
@@ -1454,7 +1456,7 @@ main:has(.billing-page) .menu-icon {
 }
 
 .billing-bill-document-title h1 {
-  margin: 0;
+  margin: 0 !important;
   color: #174b78;
   font-size: 23px;
   font-weight: 700;
@@ -1471,7 +1473,7 @@ main:has(.billing-page) .menu-icon {
   min-height: 135px;
   padding: 14px;
   border: 1px solid #b8b8b8;
-  border-radius: 14px !important;
+  border-radius: 34px !important;
   background: #ffffff;
   overflow: hidden;
   color: #1f2937;
@@ -2065,12 +2067,12 @@ body:has(.billing-bill-preview-overlay) .menu-icon {
   }
 
   .billing-bill-items-table tbody tr:has(.billing-sno-cell:empty) {
-    height: 0 !important;
+    height: 28px !important;
   }
 
   .billing-bill-items-table tbody tr:has(.billing-sno-cell:empty) td {
-    height: 0 !important;
-    min-height: 0 !important;
+    height: 28px !important;
+    min-height: 28px !important;
     padding: 0 !important;
     border-top: none !important;
     border-bottom: none !important;
@@ -2288,4 +2290,153 @@ body:has(.billing-bill-preview-overlay) .menu-icon {
   border-color: rgba(150, 180, 225, 0.7);
   background: rgba(28, 55, 110, 0.6);
   color: #ffffff;
+}
+
+/* =========================================================
+   BILL TABLE - MATCH QUOTATION TABLE
+   ========================================================= */
+
+.billing-bill-items-table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
+
+
+/* Main columns */
+
+.billing-bill-items-table .billing-col-sno {
+  width: 7.3% !important;
+}
+
+.billing-bill-items-table .billing-col-description {
+  width: 24.5% !important;
+}
+
+.billing-bill-items-table .billing-col-qty {
+  width: 7.3% !important;
+}
+
+.billing-bill-items-table .billing-col-unit {
+  width: 7.1% !important;
+}
+
+
+/* Rate + Amount group */
+
+.billing-bill-items-table .billing-group-header {
+  width: 26.7% !important;
+}
+
+
+/* IMPORTANT:
+   Don't give the common Rs/Ps class a width.
+*/
+
+.billing-bill-items-table .billing-money-sub-header {
+  width: auto !important;
+}
+
+
+/* =========================================================
+   KEEP RATE / AMOUNT HEADER TEXT IN ONE LINE
+   ========================================================= */
+
+.billing-bill-items-table thead tr:first-child th {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  word-break: normal !important;
+}
+
+.billing-bill-items-table .billing-group-header {
+  white-space: nowrap !important;
+  word-break: normal !important;
+}
+
+
+/* Rs / Ps */
+
+.billing-bill-items-table .billing-money-sub-header {
+  white-space: nowrap !important;
+  word-break: normal !important;
+  overflow: hidden !important;
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.billing-bill-items-table .billing-bill-total-row,
+.billing-bill-items-table .billing-bill-grand-total-row {
+  height: 32px !important;
+}
+
+.billing-bill-items-table .billing-total-combined-cell {
+  padding: 0 8px !important;
+  text-align: left !important;
+}
+
+.billing-bill-items-table .billing-total-combined-cell span {
+  display: inline-block !important;
+  width: 55% !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+}
+
+.billing-bill-items-table .billing-total-combined-cell strong {
+  display: inline-block !important;
+  width: 45% !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+}
+
+/* =========================================
+   BILL PREVIEW - EXACT COLUMN CONTROL
+   ========================================= */
+
+.billing-bill-items-table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
+
+/* S.No */
+.billing-bill-items-table .bill-col-sno {
+  width: 7.3% !important;
+}
+
+/* Job Description */
+.billing-bill-items-table .bill-col-description {
+  width: 24.6% !important;
+}
+
+/* Qty */
+.billing-bill-items-table .bill-col-qty {
+  width: 7.3% !important;
+}
+
+/* Unit */
+.billing-bill-items-table .bill-col-unit {
+  width: 7% !important;
+}
+
+/* Rate Rs - MORE */
+.billing-bill-items-table .bill-col-rate-rs {
+  width: 18.5% !important;
+}
+
+/* Rate Ps - LESS */
+.billing-bill-items-table .bill-col-rate-ps {
+  width: 8% !important;
+}
+
+/* Amount Rs - MORE */
+.billing-bill-items-table .bill-col-amount-rs {
+  width: 18.5% !important;
+}
+
+/* Amount Ps - LESS */
+.billing-bill-items-table .bill-col-amount-ps {
+  width: 8.8% !important;
 }
