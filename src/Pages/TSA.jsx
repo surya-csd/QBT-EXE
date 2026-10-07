@@ -763,7 +763,7 @@ const confirmDeleteTara = async () => {
     if (target === "sop") {
       styleEl.innerHTML = `
         @media print {
-          @page { size: A4 portrait; margin: 10mm 12mm; }
+          @page { size: A4 portrait; margin: 8mm 10mm; }
           html, body, #root, .dashboard, .main, .tsa, .tsa-page {
             display: block !important;
             position: static !important;
@@ -804,15 +804,47 @@ const confirmDeleteTara = async () => {
           }
           .print-sop-main-title {
             text-align: left !important;
-            margin: 0 0 14px 0 !important;
+            margin: 0 0 18px 0 !important;
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.5px !important;
+          }
+          .print-sop-step {
+            margin: 0 0 24px 0 !important;
+            padding: 0 !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+          }
+          .print-sop-step-page-break {
+            page-break-after: always !important;
+            break-after: page !important;
+            margin-bottom: 0 !important;
+          }
+          .print-sop-step-heading {
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            margin: 0 0 6px 0 !important;
+            line-height: 1.35 !important;
+          }
+          .print-sop-instructions {
+            margin: 0 !important;
+            padding: 0 0 0 16px !important;
+          }
+          .print-sop-line {
+            font-size: 11px !important;
+            font-weight: 400 !important;
+            line-height: 1.6 !important;
+            margin: 0 0 4px 0 !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
           }
         }
       `;
     } else if (target === "tara") {
       styleEl.innerHTML = `
         @media print {
-          @page { size: A4 landscape; margin: 6mm 8mm; }
-          @page tara-landscape { size: A4 landscape; margin: 6mm 8mm; }
+          @page { size: A4 landscape; margin: 4mm 6mm; }
+          @page tara-landscape { size: A4 landscape; margin: 4mm 6mm; }
           html, body, #root, .dashboard, .main, .tsa, .tsa-page {
             display: block !important;
             position: static !important;
@@ -840,8 +872,6 @@ const confirmDeleteTara = async () => {
             page: tara-landscape !important;
             page-break-after: auto !important;
             break-after: auto !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
             width: 100% !important;
             max-width: 100% !important;
             box-sizing: border-box !important;
@@ -852,7 +882,22 @@ const confirmDeleteTara = async () => {
             width: 100% !important;
             box-sizing: border-box !important;
             text-align: left !important;
-            margin-bottom: 5px !important;
+            margin-bottom: 2px !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+            break-after: avoid !important;
+            page-break-after: avoid !important;
+          }
+          .print-tara-title {
+            margin: 0 !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            line-height: 1.1 !important;
+          }
+          .print-tara-version {
+            font-size: 7px !important;
+            padding: 0.5px 2.5px !important;
+            margin-left: 4px !important;
           }
           .print-tara-top-layout {
             width: 100% !important;
@@ -860,18 +905,88 @@ const confirmDeleteTara = async () => {
             display: flex !important;
             justify-content: space-between !important;
             align-items: stretch !important;
-            gap: 8px !important;
-            margin-bottom: 6px !important;
+            gap: 6px !important;
+            margin-bottom: 3px !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+            break-after: avoid !important;
+            page-break-after: avoid !important;
+          }
+          .print-tara-logo-box {
+            width: 34px !important;
+            height: 34px !important;
+          }
+          .print-tara-logo {
+            width: 32px !important;
+            height: 32px !important;
+          }
+          .print-tara-info-table {
+            font-size: 6.8px !important;
+          }
+          .print-tara-info-table tr,
+          .print-tara-info-table td,
+          .print-tara-info-table .empty-print-row td {
+            height: 9.5px !important;
+            padding: 0.5px 3px !important;
+            line-height: 1.1 !important;
+          }
+          .print-tara-info-table .info-th {
+            width: 36% !important;
+          }
+          .print-tara-score-row {
+            gap: 4px !important;
+            margin-bottom: 2px !important;
+          }
+          .score-title {
+            font-size: 8.5px !important;
+          }
+          .score-display-box {
+            padding: 0 10px !important;
+            font-size: 9px !important;
+            height: 13px !important;
+            line-height: 13px !important;
+          }
+          .print-tara-team-table {
+            font-size: 6.8px !important;
+          }
+          .print-tara-team-table th {
+            padding: 1px 3px !important;
+            font-size: 6.8px !important;
+          }
+          .print-tara-team-table td {
+            padding: 0.5px 3px !important;
+            font-size: 6.8px !important;
+            height: 9.5px !important;
+            line-height: 1.1 !important;
+          }
+          .print-tara-id-row {
+            gap: 4px !important;
+            margin-bottom: 2px !important;
+          }
+          .id-title {
+            font-size: 8.5px !important;
+          }
+          .id-display-box {
+            padding: 0 4px !important;
+            font-size: 8.5px !important;
+            height: 13px !important;
+            line-height: 13px !important;
+          }
+          .print-tara-meta-table {
+            font-size: 6.8px !important;
+          }
+          .print-tara-meta-table td {
+            padding: 0.5px 3px !important;
+            height: 9.5px !important;
+            line-height: 1.1 !important;
           }
           .print-table-wrapper {
             width: 100% !important;
             box-sizing: border-box !important;
-            margin: 3px 0 0 0 !important;
+            margin: 1px 0 0 0 !important;
             padding: 0 !important;
             page-break-before: avoid !important;
             break-before: avoid !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
           }
           .print-risk-table {
             width: 100% !important;
@@ -879,7 +994,49 @@ const confirmDeleteTara = async () => {
             table-layout: fixed !important;
             border-collapse: collapse !important;
             box-sizing: border-box !important;
-            border-bottom: 1px solid #000000 !important;
+            border: 1px solid #000000 !important;
+            font-size: 6.8px !important;
+          }
+          .print-risk-table thead {
+            display: table-row-group !important;
+          }
+          .print-risk-table thead tr {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+          }
+          .print-risk-table th,
+          .print-risk-table td {
+            border: 1px solid #000000 !important;
+            padding: 1px 1.5px !important;
+            word-break: break-word !important;
+            vertical-align: middle !important;
+            line-height: 1.12 !important;
+            box-sizing: border-box !important;
+          }
+          .print-risk-table th {
+            font-size: 6.5px !important;
+            padding: 1.5px 1px !important;
+          }
+          .print-risk-table th .th-sub {
+            font-size: 5px !important;
+            line-height: 1.05 !important;
+            margin-top: 0.5px !important;
+          }
+          .print-risk-table .sub-th {
+            font-size: 6.5px !important;
+            padding: 1px 0.5px !important;
+          }
+          .print-risk-table tbody tr {
+            height: 11px !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+          }
+          .print-risk-table td.center {
+            text-align: center !important;
+          }
+          .print-risk-table td.left {
+            text-align: left !important;
+            padding: 1px 2px !important;
           }
           .col-sno { width: 3% !important; }
           .col-desc { width: 12.5% !important; }
@@ -891,16 +1048,12 @@ const confirmDeleteTara = async () => {
           .col-res-group { width: 7.5% !important; }
           .col-date { width: 5.5% !important; }
           .col-current-risk { width: 6% !important; }
-          .print-empty-space-row {
-            height: 180px !important;
-          }
+          .print-empty-space-row,
           .print-empty-space-row td {
-            height: 180px !important;
+            display: none !important;
+            height: 0 !important;
             padding: 0 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            border-top: 0 !important;
-            border-bottom: 1px solid #000000 !important;
+            border: none !important;
           }
           .print-page-2 { display: none !important; }
         }
@@ -908,9 +1061,9 @@ const confirmDeleteTara = async () => {
     } else {
       styleEl.innerHTML = `
         @media print {
-          @page { size: A4 landscape; margin: 6mm 8mm; }
-          @page tara-landscape { size: A4 landscape; margin: 6mm 8mm; }
-          @page sop-portrait { size: A4 portrait; margin: 10mm 12mm; }
+          @page { size: A4 landscape; margin: 4mm 6mm; }
+          @page tara-landscape { size: A4 landscape; margin: 4mm 6mm; }
+          @page sop-portrait { size: A4 portrait; margin: 8mm 10mm; }
           html, body, #root, .dashboard, .main, .tsa, .tsa-page {
             display: block !important;
             position: static !important;
@@ -938,8 +1091,6 @@ const confirmDeleteTara = async () => {
             page: tara-landscape !important;
             page-break-after: always !important;
             break-after: page !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
             width: 100% !important;
             max-width: 100% !important;
             box-sizing: border-box !important;
@@ -950,7 +1101,22 @@ const confirmDeleteTara = async () => {
             width: 100% !important;
             box-sizing: border-box !important;
             text-align: left !important;
-            margin-bottom: 5px !important;
+            margin-bottom: 2px !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+            break-after: avoid !important;
+            page-break-after: avoid !important;
+          }
+          .print-tara-title {
+            margin: 0 !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            line-height: 1.1 !important;
+          }
+          .print-tara-version {
+            font-size: 7px !important;
+            padding: 0.5px 2.5px !important;
+            margin-left: 4px !important;
           }
           .print-tara-top-layout {
             width: 100% !important;
@@ -958,18 +1124,88 @@ const confirmDeleteTara = async () => {
             display: flex !important;
             justify-content: space-between !important;
             align-items: stretch !important;
-            gap: 8px !important;
-            margin-bottom: 6px !important;
+            gap: 6px !important;
+            margin-bottom: 3px !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+            break-after: avoid !important;
+            page-break-after: avoid !important;
+          }
+          .print-tara-logo-box {
+            width: 34px !important;
+            height: 34px !important;
+          }
+          .print-tara-logo {
+            width: 32px !important;
+            height: 32px !important;
+          }
+          .print-tara-info-table {
+            font-size: 6.8px !important;
+          }
+          .print-tara-info-table tr,
+          .print-tara-info-table td,
+          .print-tara-info-table .empty-print-row td {
+            height: 9.5px !important;
+            padding: 0.5px 3px !important;
+            line-height: 1.1 !important;
+          }
+          .print-tara-info-table .info-th {
+            width: 36% !important;
+          }
+          .print-tara-score-row {
+            gap: 4px !important;
+            margin-bottom: 2px !important;
+          }
+          .score-title {
+            font-size: 8.5px !important;
+          }
+          .score-display-box {
+            padding: 0 10px !important;
+            font-size: 9px !important;
+            height: 13px !important;
+            line-height: 13px !important;
+          }
+          .print-tara-team-table {
+            font-size: 6.8px !important;
+          }
+          .print-tara-team-table th {
+            padding: 1px 3px !important;
+            font-size: 6.8px !important;
+          }
+          .print-tara-team-table td {
+            padding: 0.5px 3px !important;
+            font-size: 6.8px !important;
+            height: 9.5px !important;
+            line-height: 1.1 !important;
+          }
+          .print-tara-id-row {
+            gap: 4px !important;
+            margin-bottom: 2px !important;
+          }
+          .id-title {
+            font-size: 8.5px !important;
+          }
+          .id-display-box {
+            padding: 0 4px !important;
+            font-size: 8.5px !important;
+            height: 13px !important;
+            line-height: 13px !important;
+          }
+          .print-tara-meta-table {
+            font-size: 6.8px !important;
+          }
+          .print-tara-meta-table td {
+            padding: 0.5px 3px !important;
+            height: 9.5px !important;
+            line-height: 1.1 !important;
           }
           .print-table-wrapper {
             width: 100% !important;
             box-sizing: border-box !important;
-            margin: 3px 0 0 0 !important;
+            margin: 1px 0 0 0 !important;
             padding: 0 !important;
             page-break-before: avoid !important;
             break-before: avoid !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
           }
           .print-risk-table {
             width: 100% !important;
@@ -977,7 +1213,49 @@ const confirmDeleteTara = async () => {
             table-layout: fixed !important;
             border-collapse: collapse !important;
             box-sizing: border-box !important;
-            border-bottom: 1px solid #000000 !important;
+            border: 1px solid #000000 !important;
+            font-size: 6.8px !important;
+          }
+          .print-risk-table thead {
+            display: table-row-group !important;
+          }
+          .print-risk-table thead tr {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+          }
+          .print-risk-table th,
+          .print-risk-table td {
+            border: 1px solid #000000 !important;
+            padding: 1px 1.5px !important;
+            word-break: break-word !important;
+            vertical-align: middle !important;
+            line-height: 1.12 !important;
+            box-sizing: border-box !important;
+          }
+          .print-risk-table th {
+            font-size: 6.5px !important;
+            padding: 1.5px 1px !important;
+          }
+          .print-risk-table th .th-sub {
+            font-size: 5px !important;
+            line-height: 1.05 !important;
+            margin-top: 0.5px !important;
+          }
+          .print-risk-table .sub-th {
+            font-size: 6.5px !important;
+            padding: 1px 0.5px !important;
+          }
+          .print-risk-table tbody tr {
+            height: 11px !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+          }
+          .print-risk-table td.center {
+            text-align: center !important;
+          }
+          .print-risk-table td.left {
+            text-align: left !important;
+            padding: 1px 2px !important;
           }
           .col-sno { width: 3% !important; }
           .col-desc { width: 12.5% !important; }
@@ -989,18 +1267,13 @@ const confirmDeleteTara = async () => {
           .col-res-group { width: 7.5% !important; }
           .col-date { width: 5.5% !important; }
           .col-current-risk { width: 6% !important; }
-          .print-empty-space-row {
-            height: 180px !important;
-          }
+          .print-empty-space-row,
           .print-empty-space-row td {
-            height: 180px !important;
+            display: none !important;
+            height: 0 !important;
             padding: 0 !important;
-            border-left: 1px solid #000000 !important;
-            border-right: 1px solid #000000 !important;
-            border-top: 0 !important;
-            border-bottom: 1px solid #000000 !important;
+            border: none !important;
           }
-
           .print-page-2,
           .tsa .print-page-2 {
             display: block !important;
@@ -1022,7 +1295,39 @@ const confirmDeleteTara = async () => {
           }
           .print-sop-main-title {
             text-align: left !important;
-            margin: 0 0 14px 0 !important;
+            margin: 0 0 18px 0 !important;
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.5px !important;
+          }
+          .print-sop-step {
+            margin: 0 0 24px 0 !important;
+            padding: 0 !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+          }
+          .print-sop-step-page-break {
+            page-break-after: always !important;
+            break-after: page !important;
+            margin-bottom: 0 !important;
+          }
+          .print-sop-step-heading {
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            margin: 0 0 6px 0 !important;
+            line-height: 1.35 !important;
+          }
+          .print-sop-instructions {
+            margin: 0 !important;
+            padding: 0 0 0 16px !important;
+          }
+          .print-sop-line {
+            font-size: 11px !important;
+            font-weight: 400 !important;
+            line-height: 1.6 !important;
+            margin: 0 0 4px 0 !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
           }
         }
       `;
@@ -3016,12 +3321,6 @@ const handleFinalSubmit = async () => {
                     </td>
                   </tr>
                 ))}
-                <tr className="print-empty-space-row">
-                  {Array.from({ length: 18 }).map((_, index) => (
-                    <td key={index}></td>
-                  ))}
-                </tr>
-
               </tbody>
             </table>
           </div>
@@ -3032,33 +3331,45 @@ const handleFinalSubmit = async () => {
             <h2 className="print-sop-main-title">
               STANDARD OPERATING PROCEDURE
             </h2>
-            {sopSteps.map((step, idx) =>
-              step.heading?.trim() || step.instructions?.trim() ? (
-                <div key={idx} className="print-sop-step">
-                  {step.heading?.trim() && (
-                    <div className="print-sop-step-heading">
-                      {idx + 1}. {step.heading}
-                    </div>
-                  )}
+            {(() => {
+              const activeSopSteps = sopSteps.filter(
+                (step) => step.heading?.trim() || step.instructions?.trim()
+              );
+              return activeSopSteps.map((step, idx) => {
+                const isPageBreak =
+                  (idx + 1) % 6 === 0 && idx + 1 < activeSopSteps.length;
+                return (
+                  <div
+                    key={step.id || idx}
+                    className={`print-sop-step ${
+                      isPageBreak ? "print-sop-step-page-break" : ""
+                    }`}
+                  >
+                    {step.heading?.trim() && (
+                      <div className="print-sop-step-heading">
+                        {idx + 1}. {step.heading}
+                      </div>
+                    )}
 
-                  {step.instructions?.trim() && (
-                    <div className="print-sop-instructions">
-                      {step.instructions
-                        .split("\n")
-                        .filter((line) => line.trim())
-                        .map((line, lineIdx) => {
-                          const clean = line.replace(/^[•\-*\s]+/, "").trim();
-                          return clean ? (
-                            <div key={lineIdx} className="print-sop-line">
-                              • {clean}
-                            </div>
-                          ) : null;
-                        })}
-                    </div>
-                  )}
-                </div>
-              ) : null,
-            )}
+                    {step.instructions?.trim() && (
+                      <div className="print-sop-instructions">
+                        {step.instructions
+                          .split("\n")
+                          .filter((line) => line.trim())
+                          .map((line, lineIdx) => {
+                            const clean = line.replace(/^[•\-*\s]+/, "").trim();
+                            return clean ? (
+                              <div key={lineIdx} className="print-sop-line">
+                                • {clean}
+                              </div>
+                            ) : null;
+                          })}
+                      </div>
+                    )}
+                  </div>
+                );
+              });
+            })()}
           </div>
         </div>
       </div>
