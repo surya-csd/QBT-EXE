@@ -1234,13 +1234,26 @@ function QuotationPage({ isOpen, setIsOpen }) {
   }, 1000);
 };
 
-  const handlePrint = () => {
-    const quotationDocument =
-      document.querySelector(
-        ".quotation-preview-document"
-      );
+  const paginateQuotationItems = (itemList) => {
+    if (!itemList || itemList.length === 0) {
+      return [[]];
+    }
+    const pages = [];
+    pages.push(itemList.slice(0, 8));
+    let i = 8;
+    while (i < itemList.length) {
+      pages.push(itemList.slice(i, i + 10));
+      i += 10;
+    }
+    return pages;
+  };
 
-    if (!quotationDocument) {
+  const handlePrint = () => {
+    const pages = document.querySelectorAll(
+      ".quotation-preview-document"
+    );
+
+    if (!pages || pages.length === 0) {
       showAlert(
         "Quotation preview not found.",
         "warning"
@@ -1248,24 +1261,20 @@ function QuotationPage({ isOpen, setIsOpen }) {
       return;
     }
 
-    const printContainer =
-      document.createElement("div");
+    // Clean up any existing print containers or styles
+    document.querySelectorAll(".quotation-print-container, #quotation-print-style").forEach((el) => el.remove());
 
-    printContainer.className =
-      "quotation-print-container";
+    const printContainer = document.createElement("div");
+    printContainer.className = "quotation-print-container";
 
-    printContainer.innerHTML =
-      quotationDocument.outerHTML;
+    pages.forEach((page) => {
+      printContainer.appendChild(page.cloneNode(true));
+    });
 
-    document.body.appendChild(
-      printContainer
-    );
+    document.body.appendChild(printContainer);
 
-    const printStyle =
-      document.createElement("style");
-
-    printStyle.id =
-      "quotation-print-style";
+    const printStyle = document.createElement("style");
+    printStyle.id = "quotation-print-style";
 
     printStyle.innerHTML = `
       @media print {
@@ -1279,40 +1288,59 @@ function QuotationPage({ isOpen, setIsOpen }) {
           margin: 0 !important;
           padding: 0 !important;
           width: 210mm !important;
-          height: 297mm !important;
-          overflow: hidden !important;
-          background: white !important;
+          height: auto !important;
+          min-height: 0 !important;
+          max-height: none !important;
+          overflow: visible !important;
+          background: #ffffff !important;
         }
 
+        #root,
         body > *:not(.quotation-print-container) {
           display: none !important;
+          visibility: hidden !important;
+          height: 0 !important;
+          max-height: 0 !important;
+          overflow: hidden !important;
         }
 
         .quotation-print-container {
           display: block !important;
+          position: static !important;
           width: 210mm !important;
-          height: 297mm !important;
           margin: 0 !important;
           padding: 0 !important;
-          overflow: hidden !important;
-          background: white !important;
+          overflow: visible !important;
+          background: #ffffff !important;
           box-sizing: border-box !important;
         }
 
-        .quotation-print-container
-        .quotation-preview-document {
-          width: 269.23mm !important;
-          height: 380.77mm !important;
-          min-height: 297mm !important;
-          max-width: none !important;
+        .quotation-print-container .quotation-preview-document {
+          display: flex !important;
+          flex-direction: column !important;
+          position: relative !important;
+          width: 210mm !important;
+          min-width: 210mm !important;
+          max-width: 210mm !important;
+          height: 295mm !important;
+          min-height: 295mm !important;
+          max-height: 295mm !important;
           margin: 0 !important;
-          padding: 4mm 8mm 8mm !important;
+          padding: 10mm 14mm !important;
           box-sizing: border-box !important;
-          background: white !important;
+          background: #ffffff !important;
           border: none !important;
           box-shadow: none !important;
           overflow: hidden !important;
-          zoom: 0.78 !important;
+          break-inside: avoid !important;
+          page-break-inside: avoid !important;
+          break-after: auto !important;
+          page-break-after: auto !important;
+        }
+
+        .quotation-print-container .quotation-preview-document:not(:first-child) {
+          break-before: page !important;
+          page-break-before: always !important;
         }
 
         .quotation-preview-overlay,
@@ -1322,17 +1350,21 @@ function QuotationPage({ isOpen, setIsOpen }) {
         }
 
         .quotation-print-container table {
-          page-break-inside: avoid !important;
+          width: 100% !important;
+          table-layout: fixed !important;
+          border-collapse: collapse !important;
           break-inside: avoid !important;
+          page-break-inside: avoid !important;
         }
 
         .quotation-print-container tr {
-          page-break-inside: avoid !important;
           break-inside: avoid !important;
+          page-break-inside: avoid !important;
         }
 
-        .quotation-print-container * {
-          page-break-before: auto !important;
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
         }
       }
 
@@ -1343,9 +1375,7 @@ function QuotationPage({ isOpen, setIsOpen }) {
       }
     `;
 
-    document.head.appendChild(
-      printStyle
-    );
+    document.head.appendChild(printStyle);
 
     setTimeout(() => {
       window.print();
@@ -2045,467 +2075,399 @@ function QuotationPage({ isOpen, setIsOpen }) {
             </div>
 
             <div className="quotation-preview-scroll-area">
-              <div className="quotation-preview-document">
-                <div className="quotation-document-title">
-                  <h1>QUOTATION</h1>
-                </div>
+              {paginateQuotationItems(items).map((pageItems, pageIndex, allPages) => {
+                const isFirstPage = pageIndex === 0;
+                const isLastPage = pageIndex === allPages.length - 1;
+                const startIndex = allPages.slice(0, pageIndex).reduce((sum, p) => sum + p.length, 0);
+                const emptyRowsCount = isLastPage ? (allPages.length === 1 ? Math.max(0, 8 - items.length) : Math.max(0, 14 - pageItems.length)) : 0;
 
-                <div className="quotation-document-meta">
-                  <span>
-                    Quotation No:{" "}
-                    <strong>
-                      {quotation.quotationNo ||
-                        "—"}
-                    </strong>
-                  </span>
+                return (
+                  <div key={pageIndex} className="quotation-preview-document">
+                    {isFirstPage ? (
+                      <>
+                        <div className="quotation-document-title">
+                          <h1>QUOTATION</h1>
+                        </div>
 
-                  <span>
-                    Date:{" "}
-                    <strong>
-                      {quotation.quotationDate ||
-                        "—"}
-                    </strong>
-                  </span>
-                </div>
+                        <div className="quotation-document-parties">
+                          <div className="quotation-document-party">
+                            <div className="quotation-document-label">
+                              From
+                            </div>
 
-                <div className="quotation-document-parties">
-                  <div className="quotation-document-party">
-                    <div className="quotation-document-label">
-                      From
-                    </div>
+                            <strong>
+                              {companyMaster?.name || "—"}
+                            </strong>
 
-                    <strong>
-                      {companyMaster?.name ||
-                        "—"}
-                    </strong>
+                            <p>
+                              {companyMaster?.address || "—"}
+                            </p>
 
-                    <p>
-                      {companyMaster?.address ||
-                        "—"}
-                    </p>
+                            <p>
+                              Mobile No:{" "}
+                              {companyMaster?.mobile || "—"}
+                            </p>
 
-                    <p>
-                      Mobile No:{" "}
-                      {companyMaster?.mobile ||
-                        "—"}
-                    </p>
+                            {companyMaster?.email && (
+                              <p>
+                                E-mail:{" "}
+                                {companyMaster.email}
+                              </p>
+                            )}
 
-                    {companyMaster?.email && (
-                      <p>
-                        E-mail:{" "}
-                        {companyMaster.email}
-                      </p>
-                    )}
+                            <p>
+                              Vendor No:{" "}
+                              {companyMaster?.vendorNo || "—"}
+                            </p>
 
-                    <p>
-                      Vendor No:{" "}
-                      {companyMaster?.vendorNo ||
-                        "—"}
-                    </p>
+                            <p>
+                              GST No:{" "}
+                              {companyMaster?.gstNo || "—"}
+                            </p>
+                          </div>
 
-                    <p>
-                      GST No:{" "}
-                      {companyMaster?.gstNo ||
-                        "—"}
-                    </p>
-                  </div>
+                          <div className="quotation-document-party">
+                            <div className="quotation-document-label">
+                              To
+                            </div>
 
-                  <div className="quotation-document-party">
-                    <div className="quotation-document-label">
-                      To
-                    </div>
+                            <strong>
+                              {customerMaster?.name || "—"}
+                            </strong>
 
-                    <strong>
-                      {customerMaster?.name ||
-                        "—"}
-                    </strong>
+                            <p>
+                              {customerMaster?.address || "—"}
+                            </p>
 
-                    <p>
-                      {customerMaster?.address ||
-                        "—"}
-                    </p>
+                            <p>
+                              Through:{" "}
+                              {customerMaster?.through || "—"}
+                            </p>
 
-                    <p>
-                      Through:{" "}
-                      {customerMaster?.through ||
-                        "—"}
-                    </p>
+                            <p>
+                              Mobile No:{" "}
+                              {customerMaster?.mobile || "—"}
+                            </p>
 
-                    <p>
-                      Mobile No:{" "}
-                      {customerMaster?.mobile ||
-                        "—"}
-                    </p>
+                            {customerMaster?.email && (
+                              <p>
+                                E-mail:{" "}
+                                {customerMaster.email}
+                              </p>
+                            )}
 
-                    {customerMaster?.email && (
-                      <p>
-                        E-mail:{" "}
-                        {customerMaster.email}
-                      </p>
-                    )}
+                            <p>
+                              GST:{" "}
+                              {customerMaster?.gstNo || "—"}
+                            </p>
 
-                    <p>
-                      GST:{" "}
-                      {customerMaster?.gstNo ||
-                        "—"}
-                    </p>
+                            <p>
+                              Q. No:{" "}
+                              {quotation.quotationNo || "—"}
+                              <br />
+                              Date:{" "}
+                              {quotation.quotationDate || "—"}
+                            </p>
+                          </div>
+                        </div>
 
-                    <p>
-                      Q. No:{" "}
-                      {quotation.quotationNo ||
-                        "—"}
-                      <br />
-                      Date:{" "}
-                      {quotation.quotationDate ||
-                        "—"}
-                    </p>
-                  </div>
-                </div>
+                        <div className="quotation-document-subject-row">
+                          <div>
+                            <strong>
+                              Sub:
+                            </strong>{" "}
+                            {quotation.subject || "—"}
+                          </div>
+                        </div>
 
-                <div className="quotation-document-subject-row">
-                  <div>
-                    <strong>
-                      Sub:
-                    </strong>{" "}
-                    {quotation.subject ||
-                      "—"}
-                  </div>
+                        <div className="quotation-document-reference-row">
+                          <div>
+                            <strong>
+                              Ref:
+                            </strong>{" "}
+                            —
+                          </div>
 
-                  <div>
-                    <strong>
-                      SAC No:
-                    </strong>{" "}
-                    {quotation.sacNo ||
-                      "—"}
-                  </div>
-                </div>
+                          <div>
+                            <strong>
+                              Purchase Order:
+                            </strong>{" "}
+                            —
+                          </div>
 
-                <div className="quotation-document-reference-row">
-                  <div>
-                    <strong>
-                      Ref:
-                    </strong>{" "}
-                    —
-                  </div>
+                          <div>
+                            <strong>
+                              Date:
+                            </strong>{" "}
+                            {quotation.quotationDate || "—"}
+                          </div>
 
-                  <div>
-                    <strong>
-                      Purchase Order:
-                    </strong>{" "}
-                    —
-                  </div>
+                          <div>
+                            <strong>
+                              SAC No:
+                            </strong>{" "}
+                            {quotation.sacNo || "—"}
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
 
-                  <div>
-                    <strong>
-                      Date:
-                    </strong>{" "}
-                    {quotation.quotationDate ||
-                      "—"}
-                  </div>
+                    <table className="quotation-document-items-table">
+                      <colgroup>
+                        <col className="col-sno-width" />
+                        <col className="col-description-width" />
+                        <col className="col-qty-width" />
+                        <col className="col-unit-width" />
+                        <col className="col-rate-rs-width" />
+                        <col className="col-rate-ps-width" />
+                        <col className="col-amount-rs-width" />
+                        <col className="col-amount-ps-width" />
+                      </colgroup>
+                      {isFirstPage && (
+                        <thead>
+                          <tr>
+                            <th
+                              rowSpan="2"
+                              className="col-sno text-center"
+                            >
+                              S. No
+                            </th>
 
-                  <div>
-                    <strong>
-                      SAC No:
-                    </strong>{" "}
-                    {quotation.sacNo ||
-                      "—"}
-                  </div>
-                </div>
+                            <th
+                              rowSpan="2"
+                              className="col-description"
+                            >
+                              Job Description
+                            </th>
 
-                <table className="quotation-document-items-table">
-                 <colgroup>
-  <col className="col-sno-width" />
-  <col className="col-description-width" />
-  <col className="col-qty-width" />
-  <col className="col-unit-width" />
+                            <th
+                              rowSpan="2"
+                              className="col-qty text-center"
+                            >
+                              Qty
+                            </th>
 
-  <col className="col-rate-rs-width" />
-  <col className="col-rate-ps-width" />
+                            <th
+                              rowSpan="2"
+                              className="col-unit text-center"
+                            >
+                              Unit
+                            </th>
 
-  <col className="col-amount-rs-width" />
-  <col className="col-amount-ps-width" />
-</colgroup>
-                  <thead>
-                    <tr>
-                      <th
-                        rowSpan="2"
-                        className="col-sno"
-                      >
-                        S. No
-                      </th>
+                            <th
+                              colSpan="2"
+                              className="col-rate text-center"
+                            >
+                              Rate
+                            </th>
 
-                      <th
-                        rowSpan="2"
-                        className="col-description"
-                      >
-                        Job Description
-                      </th>
-
-                      <th
-                        rowSpan="2"
-                        className="col-qty"
-                      >
-                        Qty
-                      </th>
-
-                      <th
-                        rowSpan="2"
-                        className="col-unit"
-                      >
-                        Unit
-                      </th>
-
-                      <th
-                        colSpan="2"
-                        className="col-rate"
-                      >
-                        Rate
-                      </th>
-
-                      <th
-                        colSpan="2"
-                        className="col-amount"
-                      >
-                        Amount
-                      </th>
-                    </tr>
-
-                    <tr>
-                      <th>Rs.</th>
-                      <th>Ps.</th>
-                      <th>Rs.</th>
-                      <th>Ps.</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {items.map(
-                      (item, index) => {
-                        const quantity =
-                          Number(
-                            item.quantity
-                          ) || 0;
-
-                        const rate =
-                          Number(
-                            item.rate
-                          ) || 0;
-
-                        const amount =
-                          quantity * rate;
-
-                        const rateRs =
-                          Math.floor(
-                            rate
-                          );
-
-                        const ratePs =
-                          Math.round(
-                            (rate -
-                              rateRs) *
-                              100
-                          );
-
-                        const amountRs =
-                          Math.floor(
-                            amount
-                          );
-
-                        const amountPs =
-                          Math.round(
-                            (amount -
-                              amountRs) *
-                              100
-                          );
-
-                        return (
-                          <tr
-                            key={index}
-                          >
-                            <td>
-                              {String(
-                                index + 1
-                              ).padStart(
-                                3,
-                                "0"
-                              )}
-                            </td>
-
-                            <td className="description-cell">
-                              {item.description ||
-                                "—"}
-                            </td>
-
-                            <td>
-                              {item.quantity ||
-                                0}
-                            </td>
-
-                            <td>
-                              {item.unit ||
-                                "Each"}
-                            </td>
-
-                            <td>
-                              {rateRs.toLocaleString(
-                                "en-IN"
-                              )}
-                            </td>
-
-                            <td>
-                              {String(
-                                ratePs
-                              ).padStart(
-                                2,
-                                "0"
-                              )}
-                            </td>
-
-                            <td>
-                              {amountRs.toLocaleString(
-                                "en-IN"
-                              )}
-                            </td>
-
-                            <td>
-                              {String(
-                                amountPs
-                              ).padStart(
-                                2,
-                                "0"
-                              )}
-                            </td>
+                            <th
+                              colSpan="2"
+                              className="col-amount text-center"
+                            >
+                              Amount
+                            </th>
                           </tr>
-                        );
-                      }
+
+                          <tr>
+                            <th className="text-center">Rs.</th>
+                            <th className="text-center">Ps.</th>
+                            <th className="text-center">Rs.</th>
+                            <th className="text-center">Ps.</th>
+                          </tr>
+                        </thead>
+                      )}
+
+                      <tbody>
+                        {pageItems.map((item, localIndex) => {
+                          const globalIndex = startIndex + localIndex;
+                          const quantity =
+                            Number(item.quantity) || 0;
+                          const rate =
+                            Number(item.rate) || 0;
+                          const amount =
+                            quantity * rate;
+                          const rateRs =
+                            Math.floor(rate);
+                          const ratePs =
+                            Math.round((rate - rateRs) * 100);
+                          const amountRs =
+                            Math.floor(amount);
+                          const amountPs =
+                            Math.round((amount - amountRs) * 100);
+
+                          return (
+                            <tr key={globalIndex}>
+                              <td className="text-center">
+                                {String(globalIndex + 1).padStart(3, "0")}
+                              </td>
+
+                              <td className="description-cell">
+                                {item.description || "—"}
+                              </td>
+
+                              <td className="text-center">
+                                {item.quantity || 0}
+                              </td>
+
+                              <td className="text-center">
+                                {item.unit || "Each"}
+                              </td>
+
+                              <td className="text-right money-rs-cell">
+                                {rateRs.toLocaleString("en-IN")}
+                              </td>
+
+                              <td className="text-center money-ps-cell">
+                                {String(ratePs).padStart(2, "0")}
+                              </td>
+
+                              <td className="text-right money-rs-cell">
+                                {amountRs.toLocaleString("en-IN")}
+                              </td>
+
+                              <td className="text-center money-ps-cell">
+                                {String(amountPs).padStart(2, "0")}
+                              </td>
+                            </tr>
+                          );
+                        })}
+
+                        {Array.from({ length: emptyRowsCount }).map((_, index) => (
+                          <tr
+                            key={`empty-${index}`}
+                            className="quotation-empty-row"
+                          >
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                        ))}
+
+                        {isLastPage && (
+                          <>
+                            <tr className="quotation-summary-row">
+                              <td colSpan="2"></td>
+
+                              <td
+                                colSpan="4"
+                                className="quotation-summary-label-cell"
+                              >
+                                <span>Subtotal</span>
+                              </td>
+
+                              <td
+                                colSpan="2"
+                                className="quotation-summary-value-cell"
+                              >
+                                <strong>
+                                  ₹{money(subtotal)}
+                                </strong>
+                              </td>
+                            </tr>
+
+                            <tr className="quotation-summary-row">
+                              <td colSpan="2"></td>
+
+                              <td
+                                colSpan="4"
+                                className="quotation-summary-label-cell"
+                              >
+                                <span>CGST {cgstRate}%</span>
+                              </td>
+
+                              <td
+                                colSpan="2"
+                                className="quotation-summary-value-cell"
+                              >
+                                <strong>
+                                  ₹{money(gstResult.cgst)}
+                                </strong>
+                              </td>
+                            </tr>
+
+                            <tr className="quotation-summary-row">
+                              <td colSpan="2"></td>
+
+                              <td
+                                colSpan="4"
+                                className="quotation-summary-label-cell"
+                              >
+                                <span>SGST {sgstRate}%</span>
+                              </td>
+
+                              <td
+                                colSpan="2"
+                                className="quotation-summary-value-cell"
+                              >
+                                <strong>
+                                  ₹{money(gstResult.sgst)}
+                                </strong>
+                              </td>
+                            </tr>
+
+                            <tr className="quotation-summary-row quotation-total-row">
+                              <td colSpan="2"></td>
+
+                              <td
+                                colSpan="4"
+                                className="quotation-summary-label-cell"
+                              >
+                                <span>TOTAL</span>
+                              </td>
+
+                              <td
+                                colSpan="2"
+                                className="quotation-summary-value-cell"
+                              >
+                                <strong>
+                                  ₹{money(gstResult.total)}
+                                </strong>
+                              </td>
+                            </tr>
+                          </>
+                        )}
+                      </tbody>
+                    </table>
+
+                    {isLastPage ? (
+                      <div className="quotation-document-footer-block">
+                        <div className="quotation-document-amount-words">
+                          <strong>
+                            Amount in words:
+                          </strong>{" "}
+                          {amountInWords(gstResult.total)}
+                        </div>
+
+                        <div className="quotation-document-work">
+                          <strong>
+                            Work Complete After PO:
+                          </strong>{" "}
+                          {quotation.workCompletionDays
+                            ? `${quotation.workCompletionDays} DAYS`
+                            : "—"}
+                        </div>
+
+                        <div className="quotation-document-signature">
+                          <div className="quotation-signature-line"></div>
+                          <strong>
+                            Contractor
+                          </strong>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="quotation-page-continued-footer">
+                        <span>Continued on Page {pageIndex + 2}...</span>
+                      </div>
                     )}
-
-                    {Array.from({
-                      length: Math.max(0, 5 - items.length)
-                      }).map((_, index) => (
-                      <tr
-                        key={`empty-${index}`}
-                        className="quotation-empty-row"
-                      >
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                  ))}
-
-<tr className="quotation-summary-row">
-  <td colSpan="2"></td>
-
-  <td
-    colSpan="4"
-    className="quotation-summary-label-cell"
-  >
-    <span>Subtotal</span>
-  </td>
-
-  <td
-    colSpan="2"
-    className="quotation-summary-value-cell"
-  >
-    <strong>
-      ₹{money(subtotal)}
-    </strong>
-  </td>
-</tr>
-
-<tr className="quotation-summary-row">
-  <td colSpan="2"></td>
-
-  <td
-    colSpan="4"
-    className="quotation-summary-label-cell"
-  >
-    <span>CGST {cgstRate}%</span>
-  </td>
-
-  <td
-    colSpan="2"
-    className="quotation-summary-value-cell"
-  >
-    <strong>
-      ₹{money(gstResult.cgst)}
-    </strong>
-  </td>
-</tr>
-
-<tr className="quotation-summary-row">
-  <td colSpan="2"></td>
-
-  <td
-    colSpan="4"
-    className="quotation-summary-label-cell"
-  >
-    <span>SGST {sgstRate}%</span>
-  </td>
-
-  <td
-    colSpan="2"
-    className="quotation-summary-value-cell"
-  >
-    <strong>
-      ₹{money(gstResult.sgst)}
-    </strong>
-  </td>
-</tr>
-
-<tr className="quotation-summary-row quotation-total-row">
-  <td colSpan="2"></td>
-
-  <td
-    colSpan="4"
-    className="quotation-summary-label-cell"
-  >
-    <span>TOTAL</span>
-  </td>
-
-  <td
-    colSpan="2"
-    className="quotation-summary-value-cell"
-  >
-    <strong>
-      ₹{money(gstResult.total)}
-    </strong>
-  </td>
-</tr>
-                  </tbody>
-                </table>
-
-                <div className="quotation-document-amount-words">
-                  <strong>
-                    Amount in words:
-                  </strong>{" "}
-                  {amountInWords(
-                    gstResult.total
-                  )}
-                </div>
-
-                <div className="quotation-document-work">
-                  <strong>
-                    Work Complete After PO:
-                  </strong>{" "}
-                  {quotation.workCompletionDays
-                    ? `${quotation.workCompletionDays} DAYS`
-                    : "—"}
-                </div>
-
-                <div className="quotation-document-signature">
-                  <div className="quotation-signature-line"></div>
-
-                  <strong>
-                    Contractor
-                  </strong>
-                </div>
-              </div>
+                  </div>
+                );
+              })}
             </div>
 
             <div className="quotation-preview-modal-footer">

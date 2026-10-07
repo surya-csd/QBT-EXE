@@ -610,242 +610,156 @@ function BillingPage({ isOpen, setIsOpen }) {
     setShowPreview(false);
   };
 
- const handlePrint = () => {
-  const billDocument = document.querySelector(
-    ".billing-bill-document"
-  );
+  const paginateBillItems = (itemList) => {
+    if (!itemList || itemList.length === 0) {
+      return [[]];
+    }
+    const pages = [];
+    pages.push(itemList.slice(0, 8));
+    let i = 8;
+    while (i < itemList.length) {
+      pages.push(itemList.slice(i, i + 10));
+      i += 10;
+    }
+    return pages;
+  };
 
-  if (!billDocument) {
-    showAlert("Bill preview not found.", "warning");
-    return;
-  }
+  const handlePrint = () => {
+    const pages = document.querySelectorAll(
+      ".billing-bill-document"
+    );
 
-  const printContainer = document.createElement("div");
-  printContainer.className = "billing-print-container";
-
-  // Preview-ல் இருக்கும் document-ஐ exact-a clone செய்கிறோம்
-  const clonedDocument = billDocument.cloneNode(true);
-
-  const emptyRows = clonedDocument.querySelectorAll(
-    ".billing-empty-preview-row"
-  );
-  const itemRowCount = clonedDocument.querySelectorAll(
-    ".billing-bill-items-table tbody tr:not(.billing-empty-preview-row):not(.billing-bill-total-row):not(.billing-bill-grand-total-row)"
-  ).length;
-  const emptyRowsToKeep = Math.max(0, 5 - itemRowCount);
-
-  emptyRows.forEach((row, index) => {
-    if (index >= emptyRowsToKeep) {
-      row.remove();
+    if (!pages || pages.length === 0) {
+      showAlert("Bill preview not found.", "warning");
       return;
     }
 
-    row.style.setProperty("height", "28px", "important");
+    // Clean up any existing print containers or styles
+    document.querySelectorAll(".billing-print-container, #billing-print-style").forEach((el) => el.remove());
 
-    Array.from(row.cells).forEach((cell) => {
-      cell.style.setProperty("height", "28px", "important");
-      cell.style.setProperty("min-height", "28px", "important");
-      cell.style.setProperty("padding", "0", "important");
+    const printContainer = document.createElement("div");
+    printContainer.className = "billing-print-container";
+
+    pages.forEach((page) => {
+      printContainer.appendChild(page.cloneNode(true));
     });
-  });
 
-  printContainer.appendChild(clonedDocument);
-  document.body.appendChild(printContainer);
+    document.body.appendChild(printContainer);
 
-  const printStyle = document.createElement("style");
-  printStyle.id = "billing-print-style";
+    const printStyle = document.createElement("style");
+    printStyle.id = "billing-print-style";
 
-  printStyle.innerHTML = `
-    @media print {
+    printStyle.innerHTML = `
+      @media print {
+        @page {
+          size: A4 portrait;
+          margin: 0 !important;
+        }
 
-      @page {
-        size: 210mm 297mm;
-        margin: 0;
+        html,
+        body {
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 210mm !important;
+          height: auto !important;
+          min-height: 0 !important;
+          max-height: none !important;
+          overflow: visible !important;
+          background: #ffffff !important;
+        }
+
+        #root,
+        body > *:not(.billing-print-container) {
+          display: none !important;
+          visibility: hidden !important;
+          height: 0 !important;
+          max-height: 0 !important;
+          overflow: hidden !important;
+        }
+
+        .billing-print-container {
+          display: block !important;
+          position: static !important;
+          width: 210mm !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          overflow: visible !important;
+          background: #ffffff !important;
+          box-sizing: border-box !important;
+        }
+
+        .billing-print-container .billing-bill-document {
+          display: flex !important;
+          flex-direction: column !important;
+          position: relative !important;
+          width: 210mm !important;
+          min-width: 210mm !important;
+          max-width: 210mm !important;
+          height: 295mm !important;
+          min-height: 295mm !important;
+          max-height: 295mm !important;
+          margin: 0 !important;
+          padding: 10mm 14mm !important;
+          box-sizing: border-box !important;
+          background: #ffffff !important;
+          color: #20242c !important;
+          border: none !important;
+          box-shadow: none !important;
+          overflow: hidden !important;
+          break-inside: avoid !important;
+          page-break-inside: avoid !important;
+          break-after: auto !important;
+          page-break-after: auto !important;
+        }
+
+        .billing-print-container .billing-bill-document:not(:first-child) {
+          break-before: page !important;
+          page-break-before: always !important;
+        }
+
+        .billing-bill-preview-overlay,
+        .billing-bill-preview-header,
+        .billing-preview-actions {
+          display: none !important;
+        }
+
+        .billing-print-container table {
+          width: 100% !important;
+          table-layout: fixed !important;
+          border-collapse: collapse !important;
+          break-inside: avoid !important;
+          page-break-inside: avoid !important;
+        }
+
+        .billing-print-container tr {
+          break-inside: avoid !important;
+          page-break-inside: avoid !important;
+        }
+
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
       }
 
-      html,
-      body {
-        width: 210mm !important;
-        height: 297mm !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow: hidden !important;
-        background: #ffffff !important;
+      @media screen {
+        .billing-print-container {
+          display: none !important;
+        }
       }
+    `;
 
-      body > *:not(.billing-print-container) {
-        display: none !important;
-      }
-
-      .billing-bill-preview-overlay,
-      .billing-bill-preview-header,
-      .billing-preview-actions {
-        display: none !important;
-      }
-
-      .billing-print-container {
-        display: block !important;
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-
-        width: 210mm !important;
-        height: 297mm !important;
-
-        margin: 0 !important;
-        padding: 0 !important;
-
-        overflow: hidden !important;
-        background: #ffffff !important;
-      }
-
-      .billing-print-container .billing-bill-document {
-        display: block !important;
-
-        width: 269.23mm !important;
-        min-width: 0 !important;
-        max-width: none !important;
-
-        height: 380.77mm !important;
-        min-height: 297mm !important;
-        max-height: none !important;
-
-        margin: 0 !important;
-
-        padding: 4mm 8mm 8mm !important;
-
-        box-sizing: border-box !important;
-
-        background: #ffffff !important;
-        color: #20242c !important;
-
-        border: none !important;
-        box-shadow: none !important;
-
-        overflow: hidden !important;
-
-        transform: none !important;
-        zoom: 0.78 !important;
-      }
-
-      /*
-       * IMPORTANT:
-       * Preview-ல் இருக்கும் font/spacing/table
-       * values எதுவும் print-ல் மாற்றக்கூடாது.
-       */
-
-      .billing-print-container
-        .billing-bill-document-title {
-        margin-top: 0 !important;
-        margin-bottom: 18px !important;
-      }
-
-      .billing-print-container
-        .billing-bill-parties {
-        margin-bottom: 12px !important;
-      }
-
-      .billing-print-container
-        .billing-bill-subject-row {
-        margin-bottom: 14px !important;
-      }
-
-      .billing-print-container
-        .billing-bill-meta-row {
-        margin-bottom: 16px !important;
-      }
-
-      .billing-print-container
-        .billing-bill-items-table {
-        width: 100% !important;
-        max-width: 100% !important;
-        table-layout: fixed !important;
-        border-collapse: collapse !important;
-      }
-
-      .billing-print-container
-        .billing-bill-items-table th,
-      .billing-print-container
-        .billing-bill-items-table td {
-        padding: 7px 6px !important;
-        font-size: 15px !important;
-        line-height: normal !important;
-      }
-
-      .billing-print-container
-        .billing-bill-items-table
-        .billing-bill-total-row td {
-        height: 38px !important;
-        min-height: 38px !important;
-      }
-
-      .billing-print-container
-        .billing-bill-items-table
-        .billing-bill-grand-total-row td {
-        height: 45px !important;
-        min-height: 45px !important;
-        font-size: 16px !important;
-        font-weight: 700 !important;
-      }
-
-      .billing-print-container
-        .billing-bill-items-table
-        tbody
-        tr {
-        height: auto !important;
-      }
-
-      .billing-print-container
-        .billing-bill-document
-        .billing-bill-items-table
-        tbody
-        tr.billing-empty-preview-row {
-        height: 28px !important;
-      }
-
-      .billing-print-container
-        .billing-bill-document
-        .billing-bill-items-table
-        tbody
-        tr.billing-empty-preview-row td {
-        height: 28px !important;
-        min-height: 28px !important;
-        padding: 0 !important;
-      }
-
-      table,
-      tr,
-      td,
-      th {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-      }
-
-      * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-    }
-
-    @media screen {
-      .billing-print-container {
-        display: none !important;
-      }
-    }
-  `;
-
-  document.head.appendChild(printStyle);
-
-  // Give browser time to render cloned document
-  setTimeout(() => {
-    window.print();
+    document.head.appendChild(printStyle);
 
     setTimeout(() => {
-      printContainer.remove();
-      printStyle.remove();
-    }, 500);
-  }, 200);
-};
+      window.print();
+
+      setTimeout(() => {
+        printContainer.remove();
+        printStyle.remove();
+      }, 500);
+    }, 200);
+  };
 
   const filteredQuotations =
     approvedQuotations.filter((quotation) => {
@@ -895,24 +809,7 @@ function BillingPage({ isOpen, setIsOpen }) {
     );
   };
 
-  const MAX_BILL_PREVIEW_ITEMS = 14;
-
-  const previewItems = Array.from(
-    {
-      length: Math.max(
-        MAX_BILL_PREVIEW_ITEMS,
-        items.length
-      ),
-    },
-    (_, index) =>
-      items[index] || {
-        id: `blank-${index}`,
-        description: "",
-        quantity: "",
-        unit: "",
-        rate: 0,
-      }
-  );
+  const billPages = paginateBillItems(items);
 
   const selectedCompany =
     masterData.find(
@@ -1234,387 +1131,349 @@ function BillingPage({ isOpen, setIsOpen }) {
               </div>
 
               <div className="billing-bill-preview-content">
-                <div className="billing-bill-document">
-                  <div className="billing-bill-document-title">
-                    <h1>BILL</h1>
-                  </div>
+                {billPages.map((pageItems, pageIndex, allPages) => {
+                  const isFirstPage = pageIndex === 0;
+                  const isLastPage = pageIndex === allPages.length - 1;
+                  const startIndex = allPages.slice(0, pageIndex).reduce((sum, p) => sum + p.length, 0);
+                  const emptyRowsCount = isLastPage ? (allPages.length === 1 ? Math.max(0, 8 - items.length) : Math.max(0, 14 - pageItems.length)) : 0;
 
-                  <div className="billing-bill-parties">
-                    <div className="billing-bill-party-box">
-                      <div className="billing-bill-party-label">
-                        From
-                      </div>
+                  return (
+                    <div key={pageIndex} className="billing-bill-document">
+                      {isFirstPage ? (
+                        <>
+                          <div className="billing-bill-document-title">
+                            <h1>BILL</h1>
+                          </div>
 
-                      <div className="billing-bill-party-name">
-                        {selectedCompany?.name ||
-                          "—"}
-                      </div>
+                          <div className="billing-bill-parties">
+                            <div className="billing-bill-party-box">
+                              <div className="billing-bill-party-label">
+                                From
+                              </div>
 
-                      <div className="billing-bill-party-text">
-                        {selectedCompany?.address ||
-                          "—"}
-                      </div>
+                              <div className="billing-bill-party-name">
+                                {selectedCompany?.name || "—"}
+                              </div>
 
-                      <div className="billing-bill-party-text">
-                        Mobile No:{" "}
-                        {selectedCompany?.mobile ||
-                          "—"}
-                      </div>
+                              <div className="billing-bill-party-text">
+                                {selectedCompany?.address || "—"}
+                              </div>
 
-                      <div className="billing-bill-party-text">
-                        E-mail:{" "}
-                        {selectedCompany?.email ||
-                          "—"}
-                      </div>
+                              <div className="billing-bill-party-text">
+                                Mobile No:{" "}
+                                {selectedCompany?.mobile || "—"}
+                              </div>
 
-                      <div className="billing-bill-party-text">
-                        Vendor No:{" "}
-                        {selectedCompany?.vendorNo ||
-                          "—"}
-                      </div>
+                              <div className="billing-bill-party-text">
+                                E-mail:{" "}
+                                {selectedCompany?.email || "—"}
+                              </div>
 
-                      <div className="billing-bill-party-text">
-                        GST No:{" "}
-                        {selectedCompany?.gstNo ||
-                          "—"}
-                      </div>
-                    </div>
+                              <div className="billing-bill-party-text">
+                                Vendor No:{" "}
+                                {selectedCompany?.vendorNo || "—"}
+                              </div>
 
-                    <div className="billing-bill-party-box">
-                      <div className="billing-bill-party-label">
-                        To
-                      </div>
+                              <div className="billing-bill-party-text">
+                                GST No:{" "}
+                                {selectedCompany?.gstNo || "—"}
+                              </div>
+                            </div>
 
-                      <div className="billing-bill-party-name">
-                        {selectedCustomer?.name ||
-                          "—"}
-                      </div>
+                            <div className="billing-bill-party-box">
+                              <div className="billing-bill-party-label">
+                                To
+                              </div>
 
-                      <div className="billing-bill-party-text">
-                        {selectedCustomer?.address ||
-                          "—"}
-                      </div>
+                              <div className="billing-bill-party-name">
+                                {selectedCustomer?.name || "—"}
+                              </div>
 
-                      <div className="billing-bill-party-text">
-                        Mobile No:{" "}
-                        {selectedCustomer?.mobile ||
-                          "—"}
-                      </div>
+                              <div className="billing-bill-party-text">
+                                {selectedCustomer?.address || "—"}
+                              </div>
 
-                      <div className="billing-bill-party-text">
-                        E-mail:{" "}
-                        {selectedCustomer?.email ||
-                          "—"}
-                      </div>
+                              <div className="billing-bill-party-text">
+                                Mobile No:{" "}
+                                {selectedCustomer?.mobile || "—"}
+                              </div>
 
-                      <div className="billing-bill-party-text">
-                        Through:{" "}
-                        {selectedCustomer?.through ||
-                          "—"}
-                      </div>
+                              <div className="billing-bill-party-text">
+                                E-mail:{" "}
+                                {selectedCustomer?.email || "—"}
+                              </div>
 
-                      <div className="billing-bill-party-text">
-                        GST:{" "}
-                        {selectedCustomer?.gstNo ||
-                          "—"}
-                      </div>
+                              <div className="billing-bill-party-text">
+                                Through:{" "}
+                                {selectedCustomer?.through || "—"}
+                              </div>
 
-                      <div className="billing-bill-party-bill-info">
-                        <span>
-                          Bill No:{" "}
-                          {bill.billNo || "—"}
-                        </span>
+                              <div className="billing-bill-party-text">
+                                GST:{" "}
+                                {selectedCustomer?.gstNo || "—"}
+                              </div>
 
-                        <span>
-                          Date:{" "}
-                          {bill.date || "—"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+                              <div className="billing-bill-party-bill-info">
+                                <span>
+                                  Bill No:{" "}
+                                  {bill.billNo || "—"}
+                                </span>
 
-                  <div className="billing-bill-subject-row">
-                    <strong>Sub:</strong>
+                                <span>
+                                  Date:{" "}
+                                  {bill.date || "—"}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
 
-                    <span>
-                      {bill.subject || "—"}
-                    </span>
-                  </div>
+                          <div className="billing-bill-subject-row">
+                            <strong>Sub:</strong>
+                            <span>{bill.subject || "—"}</span>
+                          </div>
 
-                  <div className="billing-bill-meta-row">
-                    <div>
-                      <strong>Ref:</strong>{" "}
-                      {selectedQuotation?.quotation_no ||
-                        "—"}
-                    </div>
+                          <div className="billing-bill-meta-row">
+                            <div>
+                              <strong>Ref:</strong>{" "}
+                              {selectedQuotation?.quotation_no || "—"}
+                            </div>
 
-                    <div>
-                      <strong>
-                        Purchase Order:
-                      </strong>{" "}
-                      {bill.purchaseOrderNo ||
-                        "—"}
-                    </div>
+                            <div>
+                              <strong>Purchase Order:</strong>{" "}
+                              {bill.purchaseOrderNo || "—"}
+                            </div>
 
-                    <div>
-                      <strong>Date:</strong>{" "}
-                      {bill.poDate || "—"}
-                    </div>
+                            <div>
+                              <strong>Date:</strong> {bill.poDate || "—"}
+                            </div>
 
-                    <div>
-                      <strong>SAC No:</strong>{" "}
-                      {selectedQuotation?.sac_no ||
-                        "—"}
-                    </div>
-                  </div>
+                            <div>
+                              <strong>SAC No:</strong>{" "}
+                              {selectedQuotation?.sac_no || "—"}
+                            </div>
+                          </div>
+                        </>
+                      ) : null}
 
-                  <table className="billing-bill-items-table">
-                     <colgroup>
-    <col className="bill-col-sno" />
-    <col className="bill-col-description" />
-    <col className="bill-col-qty" />
-    <col className="bill-col-unit" />
-    <col className="bill-col-rate-rs" />
-    <col className="bill-col-rate-ps" />
-    <col className="bill-col-amount-rs" />
-    <col className="bill-col-amount-ps" />
-  </colgroup>
-                    <thead>
-                      <tr>
-                        <th
-                          rowSpan="2"
-                          className="billing-col-sno"
-                        >
-                          S. No
-                        </th>
+                      <table className="billing-bill-items-table">
+                        <colgroup>
+                          <col className="bill-col-sno" />
+                          <col className="bill-col-description" />
+                          <col className="bill-col-qty" />
+                          <col className="bill-col-unit" />
+                          <col className="bill-col-rate-rs" />
+                          <col className="bill-col-rate-ps" />
+                          <col className="bill-col-amount-rs" />
+                          <col className="bill-col-amount-ps" />
+                        </colgroup>
+                        {isFirstPage && (
+                          <thead>
+                            <tr>
+                              <th
+                                rowSpan="2"
+                                className="billing-col-sno text-center"
+                              >
+                                S. No
+                              </th>
 
-                        <th
-                          rowSpan="2"
-                          className="billing-col-description"
-                        >
-                          Job Description
-                        </th>
+                              <th
+                                rowSpan="2"
+                                className="billing-col-description"
+                              >
+                                Job Description
+                              </th>
 
-                        <th
-                          rowSpan="2"
-                          className="billing-col-qty"
-                        >
-                          Qty
-                        </th>
+                              <th
+                                rowSpan="2"
+                                className="billing-col-qty text-center"
+                              >
+                                Qty
+                              </th>
 
-                        <th
-                          rowSpan="2"
-                          className="billing-col-unit"
-                        >
-                          Unit
-                        </th>
+                              <th
+                                rowSpan="2"
+                                className="billing-col-unit text-center"
+                              >
+                                Unit
+                              </th>
 
-                        <th
-                          colSpan="2"
-                          className="billing-group-header"
-                        >
-                          Rate
-                        </th>
+                              <th
+                                colSpan="2"
+                                className="billing-group-header text-center"
+                              >
+                                Rate
+                              </th>
 
-                        <th
-                          colSpan="2"
-                          className="billing-group-header"
-                        >
-                          Amount
-                        </th>
-                      </tr>
-
-                      <tr>
-                        <th className="billing-money-sub-header">
-                          Rs.
-                        </th>
-
-                        <th className="billing-money-sub-header">
-                          Ps.
-                        </th>
-
-                        <th className="billing-money-sub-header">
-                          Rs.
-                        </th>
-
-                        <th className="billing-money-sub-header">
-                          Ps.
-                        </th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      {previewItems.map(
-                        (item, index) => {
-                          const amount =
-                            (Number(
-                              item.quantity
-                            ) || 0) *
-                            (Number(
-                              item.rate
-                            ) || 0);
-
-                          const rateParts =
-                            splitAmount(
-                              item.rate
-                            );
-
-                          const amountParts =
-                            splitAmount(
-                              amount
-                            );
-
-                          return (
-                            <tr
-                              key={item.id}
-                              className={
-                                index >= items.length
-                                  ? "billing-empty-preview-row"
-                                  : ""
-                              }
-                            >
-                              <td className="billing-sno-cell">
-                                {index <
-                                items.length
-                                  ? String(
-                                      (index + 1) *
-                                        10
-                                    ).padStart(
-                                      3,
-                                      "0"
-                                    )
-                                  : ""}
-                              </td>
-
-                              <td className="billing-description-cell">
-                                {index <
-                                items.length
-                                  ? item.description ||
-                                    "—"
-                                  : ""}
-                              </td>
-
-                              <td className="billing-qty-cell">
-                                {index <
-                                items.length
-                                  ? item.quantity ||
-                                    "—"
-                                  : ""}
-                              </td>
-
-                              <td className="billing-unit-cell">
-                                {index <
-                                items.length
-                                  ? item.unit ||
-                                    "—"
-                                  : ""}
-                              </td>
-
-                              <td className="billing-money-cell">
-                                {index <
-                                items.length
-                                  ? rateParts.rs
-                                  : ""}
-                              </td>
-
-                              <td className="billing-money-cell">
-                                {index <
-                                items.length
-                                  ? rateParts.ps
-                                  : ""}
-                              </td>
-
-                              <td className="billing-money-cell">
-                                {index <
-                                items.length
-                                  ? amountParts.rs
-                                  : ""}
-                              </td>
-
-                              <td className="billing-money-cell">
-                                {index <
-                                items.length
-                                  ? amountParts.ps
-                                  : ""}
-                              </td>
+                              <th
+                                colSpan="2"
+                                className="billing-group-header text-center"
+                              >
+                                Amount
+                              </th>
                             </tr>
-                          );
-                        }
+
+                            <tr>
+                              <th className="billing-money-sub-header text-center">
+                                Rs.
+                              </th>
+
+                              <th className="billing-money-sub-header text-center">
+                                Ps.
+                              </th>
+
+                              <th className="billing-money-sub-header text-center">
+                                Rs.
+                              </th>
+
+                              <th className="billing-money-sub-header text-center">
+                                Ps.
+                              </th>
+                            </tr>
+                          </thead>
+                        )}
+
+                        <tbody>
+                          {pageItems.map((item, localIndex) => {
+                            const globalIndex = startIndex + localIndex;
+                            const amount =
+                              (Number(item.quantity) || 0) *
+                              (Number(item.rate) || 0);
+
+                            const rateParts = splitAmount(item.rate);
+                            const amountParts = splitAmount(amount);
+
+                            return (
+                              <tr key={item.id || globalIndex}>
+                                <td className="billing-sno-cell text-center">
+                                  {String((globalIndex + 1) * 10).padStart(3, "0")}
+                                </td>
+
+                                <td className="billing-description-cell">
+                                  {item.description || "—"}
+                                </td>
+
+                                <td className="billing-qty-cell text-center">
+                                  {item.quantity || "—"}
+                                </td>
+
+                                <td className="billing-unit-cell text-center">
+                                  {item.unit || "—"}
+                                </td>
+
+                                <td className="billing-money-cell text-right">
+                                  {rateParts.rs}
+                                </td>
+
+                                <td className="billing-money-cell text-center">
+                                  {rateParts.ps}
+                                </td>
+
+                                <td className="billing-money-cell text-right">
+                                  {amountParts.rs}
+                                </td>
+
+                                <td className="billing-money-cell text-center">
+                                  {amountParts.ps}
+                                </td>
+                              </tr>
+                            );
+                          })}
+
+                          {Array.from({ length: emptyRowsCount }).map((_, index) => (
+                            <tr key={`empty-${index}`} className="billing-empty-preview-row">
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                          ))}
+
+                          {isLastPage && (
+                            <>
+                              {/* SUBTOTAL */}
+                              <tr className="billing-bill-total-row">
+                                <td colSpan="2"></td>
+
+                                <td colSpan="4" className="billing-total-label-cell">
+                                  Subtotal
+                                </td>
+
+                                <td colSpan="2" className="billing-total-amount-cell">
+                                  ₹{" "}
+                                  {subtotal.toLocaleString("en-IN", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                  })}
+                                </td>
+                              </tr>
+
+                              {/* CGST */}
+                              <tr className="billing-bill-total-row">
+                                <td colSpan="2"></td>
+
+                                <td colSpan="4" className="billing-total-label-cell">
+                                  CGST {cgstRate}%
+                                </td>
+
+                                <td colSpan="2" className="billing-total-amount-cell">
+                                  ₹{" "}
+                                  {cgst.toLocaleString("en-IN", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                  })}
+                                </td>
+                              </tr>
+
+                              {/* SGST */}
+                              <tr className="billing-bill-total-row">
+                                <td colSpan="2"></td>
+
+                                <td colSpan="4" className="billing-total-label-cell">
+                                  SGST {sgstRate}%
+                                </td>
+
+                                <td colSpan="2" className="billing-total-amount-cell">
+                                  ₹{" "}
+                                  {sgst.toLocaleString("en-IN", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                  })}
+                                </td>
+                              </tr>
+
+                              {/* TOTAL */}
+                              <tr className="billing-bill-grand-total-row">
+                                <td colSpan="2"></td>
+
+                                <td colSpan="4" className="billing-total-label-cell billing-grand-total-cell">
+                                  TOTAL
+                                </td>
+
+                                <td colSpan="2" className="billing-total-amount-cell billing-grand-total-cell">
+                                  ₹{" "}
+                                  {total.toLocaleString("en-IN", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                  })}
+                                </td>
+                              </tr>
+                            </>
+                          )}
+                        </tbody>
+                      </table>
+
+                      {!isLastPage && (
+                        <div className="billing-page-continued-footer">
+                          <span>Continued on Page {pageIndex + 2}...</span>
+                        </div>
                       )}
-
-{/* SUBTOTAL */}
-<tr className="billing-bill-total-row">
-  <td colSpan="2"></td>
-
-  <td colSpan="4" className="billing-total-label-cell">
-    Subtotal
-  </td>
-
-  <td colSpan="2" className="billing-total-amount-cell">
-    ₹{" "}
-    {subtotal.toLocaleString("en-IN", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}
-  </td>
-</tr>
-
-
-{/* CGST */}
-<tr className="billing-bill-total-row">
-  <td colSpan="2"></td>
-
-  <td colSpan="4" className="billing-total-label-cell">
-    CGST {cgstRate}%
-  </td>
-
-  <td colSpan="2" className="billing-total-amount-cell">
-    ₹{" "}
-    {cgst.toLocaleString("en-IN", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}
-  </td>
-</tr>
-
-
-{/* SGST */}
-<tr className="billing-bill-total-row">
-  <td colSpan="2"></td>
-
-  <td colSpan="4" className="billing-total-label-cell">
-    SGST {sgstRate}%
-  </td>
-
-  <td colSpan="2" className="billing-total-amount-cell">
-    ₹{" "}
-    {sgst.toLocaleString("en-IN", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}
-  </td>
-</tr>
-
-
-{/* TOTAL */}
-<tr className="billing-bill-grand-total-row">
-  <td colSpan="2"></td>
-
-  <td colSpan="4" className="billing-total-label-cell billing-grand-total-cell">
-    TOTAL
-  </td>
-
-  <td colSpan="2" className="billing-total-amount-cell billing-grand-total-cell">
-    ₹{" "}
-    {total.toLocaleString("en-IN", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}
-  </td>
-</tr>
-                    </tbody>
-                  </table>
-                </div>
+                    </div>
+                  );
+                })}
               </div>
 
               <div className="billing-preview-actions">
